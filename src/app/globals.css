@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #f4f8f8;
+  --foreground: #152a2e;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: #b7e2e5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes lbFloat {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -10px, 0); }
+}
+@keyframes lbSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes lbSpinRev {
+  to { transform: rotate(-360deg); }
+}
+@keyframes lbPulse {
+  0%, 100% { opacity: .3; transform: scale(1); }
+  50%      { opacity: 1;  transform: scale(1.5); }
+}
+@keyframes lbRadar {
+  0%   { transform: scale(.55); opacity: .3; }
+  100% { transform: scale(1.5);  opacity: 0; }
+}
+@keyframes lbScan {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(320%); }
+}
+@keyframes lbGridPan {
+  to { background-position: 46px 46px; }
+}
+@keyframes lfRise {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+@keyframes lfFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+@keyframes lfMarq {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (max-width: 700px) {
+  .lf-trust {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .lf-trust > div:first-child {
+    border-right: 0 !important;
+    border-bottom: 1px solid #E6EEEF;
+    justify-content: center;
+  }
 }

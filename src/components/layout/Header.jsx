@@ -25,7 +25,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-[60] border-b border-[#D6E3E5] bg-white">
-      <div className="relative mx-auto flex h-[60px] max-w-[1280px] items-center justify-between gap-5 px-[clamp(16px,3vw,32px)]">
+      <div className="relative mx-auto flex h-[60px] max-w-[1280px] items-center justify-between gap-4 px-[clamp(16px,3vw,32px)]">
         {/* Logo */}
         <Link href="/" aria-label="Luneblaze home" className="flex shrink-0 items-center">
           <Image
@@ -39,14 +39,14 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden h-full items-stretch font-bold text-[14.5px] xl:flex">
+        <nav className="hidden h-full items-stretch font-bold text-[14.5px] lg:flex">
           {navLinks.map((link) => {
             const active = isActive(link.href, pathname);
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center px-[18px] border-b-[3px] transition-colors ${
+                className={`flex items-center px-3 xl:px-[18px] border-b-[3px] transition-colors ${
                   active
                     ? "border-[#17AEB9] text-[#0E8B95]"
                     : "border-transparent text-[#4C6165] hover:text-[#0E8B95] hover:border-[#B7E2E5]"
@@ -62,7 +62,7 @@ export default function Header() {
         <div className="flex shrink-0 items-center gap-[10px]">
           <Link
             href="/book-a-demo"
-            className="inline-flex items-center gap-2 whitespace-nowrap rounded-[10px] bg-[#17AEB9] px-5 py-3 text-sm font-bold text-white shadow-[0_12px_28px_-12px_rgba(23,174,185,.85)] transition-colors hover:bg-[#0E8B95] hover:text-white"
+            className="hidden sm:inline-flex items-center gap-2 whitespace-nowrap rounded-[10px] bg-[#17AEB9] px-4 py-2.5 text-sm font-bold text-white shadow-[0_12px_28px_-12px_rgba(23,174,185,.85)] transition-colors hover:bg-[#0E8B95] hover:text-white lg:px-5 lg:py-3"
           >
             Book a Demo <span>↗</span>
           </Link>
@@ -72,7 +72,7 @@ export default function Header() {
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Close menu" : "Menu"}
             aria-expanded={menuOpen}
-            className="h-[44px] rounded-[4px] border border-[#D6E3E5] bg-white px-[14px] text-sm font-bold text-[#152A2E] xl:hidden"
+            className="h-[40px] rounded-[4px] border border-[#D6E3E5] bg-white px-3 text-sm font-bold text-[#152A2E] transition-colors hover:bg-gray-50 lg:hidden"
           >
             {menuOpen ? "Close" : "Menu"}
           </button>
@@ -81,7 +81,7 @@ export default function Header() {
 
       {/* Mobile Navigation */}
       {menuOpen && (
-        <nav className="grid border-t border-[#D6E3E5] bg-white text-base font-bold xl:hidden">
+        <nav className="grid border-t border-[#D6E3E5] bg-white text-base font-bold shadow-lg lg:hidden">
           {navLinks.map((link) => {
             const active = isActive(link.href, pathname);
             return (
@@ -91,14 +91,22 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
                 className={`border-b border-[#E6EEEF] px-[clamp(16px,3vw,32px)] py-[15px] ${
                   active
-                    ? "border-l-[3px] border-l-[#17AEB9] text-[#0E8B95]"
-                    : "text-[#152A2E]"
+                    ? "border-l-[3px] border-l-[#17AEB9] text-[#0E8B95] bg-[#F4FAFA]"
+                    : "text-[#152A2E] hover:bg-gray-50"
                 }`}
               >
                 {link.name}
               </Link>
             );
           })}
+          {/* Mobile-only Book a Demo button inside the menu */}
+          <Link
+            href="/book-a-demo"
+            onClick={() => setMenuOpen(false)}
+            className="px-[clamp(16px,3vw,32px)] py-[15px] text-[#0E8B95] sm:hidden"
+          >
+            Book a Demo ↗
+          </Link>
         </nav>
       )}
     </header>

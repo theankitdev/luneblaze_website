@@ -80,10 +80,7 @@ export default function KnowledgeSection() {
         </div>
 
         {/* cards */}
-        <div
-          className="lf-kq3 mt-8 grid gap-[clamp(14px,2.2vw,32px)]"
-          style={{ gridTemplateColumns: "repeat(3,minmax(0,1fr))" }}
-        >
+        <div className="mt-8 grid grid-cols-1 gap-[clamp(14px,2.2vw,32px)] md:grid-cols-3">
           {resources.map((resource) => (
             <Link
               key={resource.category}

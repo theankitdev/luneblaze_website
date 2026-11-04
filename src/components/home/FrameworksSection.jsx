@@ -83,16 +83,13 @@ export default function FrameworksSection() {
           </p>
         </div>
 
-        {/* framework rail — 3 items only, matching prototype's fws3 */}
-        <div
-          className="lf-rail mt-[clamp(28px,4vw,44px)] grid overflow-x-auto border border-[#C9D9DC]"
-          style={{ gridAutoFlow: "column", gridAutoColumns: "minmax(240px,1fr)" }}
-        >
+        {/* framework grid — responsive 1-col -> 3-col */}
+        <div className="mt-[clamp(28px,4vw,44px)] grid grid-cols-1 border border-[#C9D9DC] md:grid-cols-3">
           {frameworks.map((framework) => (
             <Link
               key={framework.name}
               href={framework.href}
-              className="grid border-r border-[#D6E3E5] px-[22px] py-[18px] text-[#152A2E] transition-colors hover:bg-[#F4FAFA]"
+              className="grid border-b border-[#D6E3E5] px-[22px] py-[18px] text-[#152A2E] transition-colors hover:bg-[#F4FAFA] md:border-b-0 md:border-r last:border-b-0 last:border-r-0"
               style={{ gridTemplateColumns: "52px minmax(0,1fr) auto", columnGap: "16px", alignItems: "start" }}
             >
               <div
@@ -126,7 +123,7 @@ export default function FrameworksSection() {
 
         {/* gradient panel */}
         <div
-          className="lf-mtp relative mt-5 grid overflow-hidden border border-[#C9D9DC]"
+          className="relative mt-5 grid overflow-hidden border border-[#C9D9DC]"
           style={{
             gridTemplateColumns: "minmax(0,1fr)",
             background: "linear-gradient(120deg,#F3FAFB 0%,#E4F4F5 100%)",
@@ -167,10 +164,8 @@ export default function FrameworksSection() {
               of how they work.
             </p>
 
-            <div
-              className="lf-mtp4 mt-[22px] grid gap-3 text-left"
-              style={{ gridTemplateColumns: "repeat(4,minmax(0,1fr))" }}
-            >
+            {/* support grid — responsive 1-col -> 2-col -> 4-col */}
+            <div className="mt-[22px] grid grid-cols-1 gap-3 text-left sm:grid-cols-2 xl:grid-cols-4">
               {support.map(([number, title, description]) => (
                 <div key={number} className="flex items-start gap-3 border border-[#D6E3E5] bg-white px-[14px] py-3">
                   <b className="shrink-0 rounded-[3px] bg-[#17AEB9] px-[7px] py-1 text-[11.5px] font-extrabold text-white">

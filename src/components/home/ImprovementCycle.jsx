@@ -45,7 +45,7 @@ const cycleR = [CYCLE[0], CYCLE[1], CYCLE[2]];
 function CycleCard({ step }) {
   return (
     <article
-      className="rounded-none border border-[#C9D9DC] border-l-[3px] border-l-[#17AEB9] bg-white px-[18px] py-4 transition-[transform,border-color] duration-200 hover:-translate-y-[3px] hover:border-[#17AEB9]"
+      className="rounded-none border border-[#C9D9DC] border-l-[3px] border-l-[#17AEB9] bg-white transition-[transform,border-color] duration-200 hover:-translate-y-[3px] hover:border-[#17AEB9]"
       style={{ padding: "16px 18px" }}
     >
       <div className="flex items-center gap-[10px]">
@@ -88,18 +88,17 @@ function CycleCard({ step }) {
 
 function CycleDiagram() {
   const nodes = [
-    { num: "01", label: "Assess",    cx: 275,  cy: 70.1, tx: 298,  ty: 35.3, numColor: "#0E8B95" },
-    { num: "02", label: "Document",  cx: 350,  cy: 200,  tx: 396,  ty: 205,  numColor: "#0E8B95" },
-    { num: "03", label: "Evidence",  cx: 275,  cy: 329.9, tx: 298, ty: 374.7, numColor: "#0E8B95" },
-    { num: "04", label: "Review",    cx: 125,  cy: 329.9, tx: 102, ty: 374.7, numColor: "#0E8B95" },
-    { num: "05", label: "Monitor",   cx: 50,   cy: 200,  tx: 4,   ty: 205,  numColor: "#0E8B95" },
-    { num: "06", label: "Improve",   cx: 125,  cy: 70.1, tx: 102, ty: 35.3, numColor: "#0E8B95" },
+    { num: "01", label: "Assess", cx: 275, cy: 70.1, tx: 298, ty: 35.3, numColor: "#0E8B95" },
+    { num: "02", label: "Document", cx: 350, cy: 200, tx: 396, ty: 205, numColor: "#0E8B95" },
+    { num: "03", label: "Evidence", cx: 275, cy: 329.9, tx: 298, ty: 374.7, numColor: "#0E8B95" },
+    { num: "04", label: "Review", cx: 125, cy: 329.9, tx: 102, ty: 374.7, numColor: "#0E8B95" },
+    { num: "05", label: "Monitor", cx: 50, cy: 200, tx: 4, ty: 205, numColor: "#0E8B95" },
+    { num: "06", label: "Improve", cx: 125, cy: 70.1, tx: 102, ty: 35.3, numColor: "#0E8B95" },
   ];
 
   return (
     <div
-      className="lf-cycR0 relative mx-auto aspect-square w-full"
-      style={{ maxWidth: "420px" }}
+      className="relative mx-auto w-full max-w-[420px] aspect-square flex items-center justify-center my-6 lg:my-0 order-first lg:order-none"
     >
       {/* rotating dot layer — outer track */}
       <div
@@ -123,8 +122,7 @@ function CycleDiagram() {
             height: "20px",
             borderRadius: "50%",
             background: "#17AEB9",
-            boxShadow:
-              "0 0 0 6px rgba(23,174,185,.22), 0 0 18px rgba(23,174,185,.7)",
+            boxShadow: "0 0 0 6px rgba(23,174,185,.22), 0 0 18px rgba(23,174,185,.7)",
           }}
         />
         <span
@@ -171,15 +169,7 @@ function CycleDiagram() {
         style={{ width: "100%", height: "100%", overflow: "visible" }}
       >
         <defs>
-          <marker
-            id="lfArr"
-            viewBox="0 0 10 10"
-            refX="6"
-            refY="5"
-            markerWidth="5"
-            markerHeight="5"
-            orient="auto"
-          >
+          <marker id="lfArr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto">
             <path d="M0 0 L10 5 L0 10 z" fill="#17AEB9" />
           </marker>
         </defs>
@@ -201,26 +191,10 @@ function CycleDiagram() {
           {nodes.map((n) => (
             <g key={n.num}>
               <circle cx={n.cx} cy={n.cy} r="24" fill="#fff" stroke="#17AEB9" strokeWidth="3" />
-              <text
-                x={n.cx}
-                y={n.cy + 5}
-                textAnchor="middle"
-                fontFamily="Manrope,Arial,sans-serif"
-                fontSize="15"
-                fontWeight="800"
-                fill={n.numColor}
-              >
+              <text x={n.cx} y={n.cy + 5} textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="15" fontWeight="800" fill={n.numColor}>
                 {n.num}
               </text>
-              <text
-                x={n.tx}
-                y={n.ty}
-                textAnchor="middle"
-                fontFamily="Manrope,Arial,sans-serif"
-                fontSize="15"
-                fontWeight="800"
-                fill="#152A2E"
-              >
+              <text x={n.tx} y={n.ty} textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="15" fontWeight="800" fill="#152A2E">
                 {n.label}
               </text>
             </g>
@@ -254,16 +228,12 @@ export default function ImprovementCycle() {
       }}
     >
       {/* decorative bg */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
           className="absolute inset-0"
           style={{
             opacity: 0.36,
-            backgroundImage:
-              "radial-gradient(circle, rgba(23,174,185,.18) 1.1px, transparent 1.1px)",
+            backgroundImage: "radial-gradient(circle, rgba(23,174,185,.18) 1.1px, transparent 1.1px)",
             backgroundSize: "28px 28px",
             animation: "lbGridPan 42s linear infinite",
           }}
@@ -278,16 +248,10 @@ export default function ImprovementCycle() {
             animation: "lbSpin 120s linear infinite",
           }}
         >
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{ border: "1px solid rgba(23,174,185,.14)" }}
-          />
+          <div className="absolute inset-0 rounded-full" style={{ border: "1px solid rgba(23,174,185,.14)" }} />
           <div
             className="absolute rounded-full"
-            style={{
-              inset: "26%",
-              border: "1px dashed rgba(23,174,185,.12)",
-            }}
+            style={{ inset: "26%", border: "1px dashed rgba(23,174,185,.12)" }}
           />
         </div>
       </div>
@@ -314,35 +278,27 @@ export default function ImprovementCycle() {
               textWrap: "balance",
             }}
           >
-            A continuous cycle.{" "}
-            <span className="text-[#17AEB9]">
-              A stronger institution every time.
-            </span>
+            A continuous cycle. <span className="text-[#17AEB9]">A stronger institution every time.</span>
           </h2>
         </div>
 
-        {/* cycle layout */}
-        <div
-          className="lf-cyc grid items-center"
-          style={{
-            marginTop: "clamp(28px, 4vw, 48px)",
-            gridTemplateColumns:
-              "minmax(0,1fr) minmax(280px,420px) minmax(0,1fr)",
-            gap: "clamp(16px, 2.4vw, 32px)",
-          }}
-        >
+        {/* cycle layout - Responsive Grid */}
+        <div className="mt-[clamp(28px,4vw,48px)] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(280px,420px)_minmax(0,1fr)] items-center gap-[clamp(16px,2.4vw,32px)]">
+          
           {/* left column — 06, 05, 04 (bottom to top) */}
-          <div className="lf-cycL grid" style={{ gap: "14px" }}>
+          <div className="order-2 lg:order-1 grid gap-[14px]">
             {cycleL.map((step) => (
               <CycleCard key={step.number} step={step} />
             ))}
           </div>
 
           {/* center — SVG diagram */}
-          <CycleDiagram />
+          <div className="order-1 lg:order-2 flex justify-center w-full">
+            <CycleDiagram />
+          </div>
 
           {/* right column — 01, 02, 03 (top to bottom) */}
-          <div className="lf-cycR grid" style={{ gap: "14px" }}>
+          <div className="order-3 grid gap-[14px]">
             {cycleR.map((step) => (
               <CycleCard key={step.number} step={step} />
             ))}

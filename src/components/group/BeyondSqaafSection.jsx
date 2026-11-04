@@ -1,4 +1,4 @@
-// src/components/shared/BeyondSqaafSection.jsx
+
 "use client";
 
 export default function BeyondSqaafSection({

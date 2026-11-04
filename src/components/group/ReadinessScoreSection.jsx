@@ -1,6 +1,12 @@
 // src/components/shared/ReadinessScoreSection.jsx
 "use client";
 
+const DEFAULT_ROWS = [
+  { school: "Campus North", score: 86, focus: "Review cycle", color: "#17AEB9" },
+  { school: "Campus Central", score: 78, focus: "Staff participation", color: "#17AEB9" },
+  { school: "Campus South", score: 64, focus: "Documentation", color: "#E0A42B" },
+];
+
 export default function ReadinessScoreSection({
   eyebrow = "Readiness Score™ across your group",
   heading = "See each school’s readiness.",
@@ -31,7 +37,7 @@ export default function ReadinessScoreSection({
             background: "#fff",
           }}
         >
-          {/* Left: eyebrow + heading + copy + note */}
+          {/* LEFT — eyebrow + heading + copy + note */}
           <div
             data-rv=""
             style={{
@@ -111,7 +117,7 @@ export default function ReadinessScoreSection({
             )}
           </div>
 
-          {/* Right: campus readiness table */}
+          {/* RIGHT — campus readiness table */}
           <div
             data-rv=""
             style={{
@@ -123,6 +129,7 @@ export default function ReadinessScoreSection({
             }}
           >
             <div style={{ border: "1px solid #C9D9DC" }}>
+              {/* header */}
               <div
                 style={{
                   display: "flex",
@@ -151,6 +158,8 @@ export default function ReadinessScoreSection({
                   Illustrative data
                 </span>
               </div>
+
+              {/* column headers */}
               <div
                 style={{
                   display: "grid",
@@ -168,6 +177,8 @@ export default function ReadinessScoreSection({
                 <span>SCORE</span>
                 <span>FOCUS AREA</span>
               </div>
+
+              {/* rows */}
               {rows.map((r) => (
                 <div
                   key={r.school}
@@ -184,7 +195,7 @@ export default function ReadinessScoreSection({
                 >
                   <span style={{ fontWeight: 700 }}>{r.school}</span>
                   <span>
-                    <b>{r.score}</b>
+                    <b>{r.score}/100</b>
                     <span
                       style={{
                         display: "block",
@@ -206,6 +217,8 @@ export default function ReadinessScoreSection({
                   <span style={{ color: "#4C6165" }}>{r.focus}</span>
                 </div>
               ))}
+
+              {/* footnote */}
               <p
                 style={{
                   margin: 0,
@@ -223,9 +236,3 @@ export default function ReadinessScoreSection({
     </section>
   );
 }
-
-const DEFAULT_ROWS = [
-  { school: "Campus North", score: 86, focus: "Review cycle", color: "#17AEB9" },
-  { school: "Campus Central", score: 78, focus: "Staff participation", color: "#17AEB9" },
-  { school: "Campus South", score: 64, focus: "Documentation", color: "#E0A42B" },
-];

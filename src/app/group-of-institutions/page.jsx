@@ -1,12 +1,13 @@
 import GroupHero from "@/components/group/GroupHero";
 import FeatureGridSection from "@/components/heis/FeatureGridSection";
-import GdashSection from "@/components/group/GdashSection";
+import GroupIntroSection from "@/components/group/GroupIntroSection";
 import PillarGridSection from "@/components/group/PillarGridSection";
 import ReadinessScoreSection from "@/components/group/ReadinessScoreSection";
-import BeyondSqaafSection from "./BeyondSqaafSection";
+import BeyondSqaafSection from "../../components/group/BeyondSqaafSection";
 import KnowledgeSection from "@/components/sections/KnowledgeSection";
 import ClientsStrip from "@/components/sections/ClientsStrip";
 import FinalCTA from "@/components/sections/FinalCTA";
+import GdashSection from "@/components/group/GdashSection";
 
 const GROUP_CLIENTS = [
   { name: "Father Agnel Group of Schools", img: "/assets/client-father-agnel.png" },
@@ -49,6 +50,7 @@ export default function GroupOfInstitutionsPage() {
           },
         ]}
       />
+      <GroupIntroSection />
       <GdashSection />
       <PillarGridSection />
       <ReadinessScoreSection />

@@ -10,6 +10,7 @@ import FrameworksSection from "@/components/home/FrameworksSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import KnowledgeSection from "@/components/sections/KnowledgeSection";
 import FinalCTA from "@/components/sections/FinalCTA";
+import QualitySystemFilm from "@/components/home/QualitySystemFilm";
 
 
 export const metadata = {
@@ -66,6 +67,7 @@ export default function HomePage() {
       <HeroSection />
       <TrustedInstitutions />
       <PathwaysSection />
+      <QualitySystemFilm />
       <EcosystemSection />
       <WorkspaceSection />
       <ImprovementCycle />

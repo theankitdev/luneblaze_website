@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luneblaze clip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800;900&display=swap">
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#FAF6EE}#root{position:fixed;inset:0}</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="react.js"></script>
+<script src="react-dom.js"></script>
+<script src="film.js"></script>
+<script>
+(function () {
+  var h = React.createElement, S = window.LBStory;
+  var q = new URLSearchParams(location.search);
+  var name = q.get('s') || 'Readiness';
+  var dur = parseFloat(q.get('d')) || 8;
+  var hold = parseFloat(q.get('hold')) || 2;
+  var loopLen = dur + hold;
+  var CX = parseFloat(q.get('cx')), CY = parseFloat(q.get('cy')), CW = parseFloat(q.get('cw')), CH = parseFloat(q.get('ch'));
+  var crop = !isNaN(CW) && !isNaN(CH), clipX = parseFloat(q.get('clipx')) || 0, clear = q.get('bg') === 'none';
+  if (clear) { document.documentElement.style.background = 'transparent'; document.body.style.background = 'transparent'; }
+  function Clip() {
+    var st = React.useState(0), t = st[0], setT = st[1];
+    var sc = React.useState(1), scale = sc[0], setScale = sc[1];
+    React.useEffect(function () {
+      var fit = function () { var bw = crop ? CW : S.W, bh = crop ? CH : S.H; setScale(Math.min(innerWidth / bw, innerHeight / bh)); };
+      fit(); addEventListener('resize', fit);
+      var raf, last = performance.now(), acc = 0;
+      var tick = function (now) {
+        var dt = Math.min(0.1, (now - last) / 1000); last = now;
+        if (!document.hidden) { acc = (acc + dt) % loopLen; setT(acc); }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+      return function () { cancelAnimationFrame(raf); removeEventListener('resize', fit); };
+    }, []);
+    var PG = (window.LB && window.LB.PAGES || []).find(function (x) { return x[0] === name; }); var Comp = S.COMP[name] || (PG && PG[1]);
+    var tc = Math.min(t, dur);
+    var fade = Math.min(1, t / 0.4) * Math.min(1, (loopLen - t) / 0.5);
+    var bw = crop ? CW : S.W, bh = crop ? CH : S.H;
+    var ox = crop ? -(CX - CW / 2) : 0, oy = crop ? -(CY - CH / 2) : 0;
+    return h('div', { style: { position: 'absolute', left: '50%', top: '50%', width: bw, height: bh, marginLeft: -bw / 2, marginTop: -bh / 2, transform: 'scale(' + scale + ')', overflow: 'hidden', background: clear ? 'transparent' : S.CREAM } },
+      h('div', { style: { position: 'absolute', left: ox, top: oy, width: S.W, height: S.H, clipPath: clipX ? 'polygon(' + clipX + 'px 0, 1920px 0, 1920px 1080px, ' + (clipX + 110) + 'px 1080px, ' + (clipX + 110) + 'px 700px, ' + clipX + 'px 700px)' : 'none' } },
+        clear ? null : h(S.Backdrop, { T: tc }),
+        h('div', { style: { position: 'absolute', inset: 0, opacity: fade } }, Comp ? h(Comp, { t: tc, T: tc, s: 0 }) : null)));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Clip));
+})();
+</script>
+</body>
+</html>

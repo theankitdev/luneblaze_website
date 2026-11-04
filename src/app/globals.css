@@ -38,6 +38,7 @@ body {
   }
 }
 
+/* ── Keyframes ── */
 @keyframes lbFloat {
   0%, 100% { transform: translate3d(0, 0, 0); }
   50%      { transform: translate3d(0, -10px, 0); }
@@ -71,12 +72,12 @@ body {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-8px); }
 }
-
 @keyframes lfMarq {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
 
+/* ── Trust strip mobile ── */
 @media (max-width: 700px) {
   .lf-trust {
     grid-template-columns: minmax(0, 1fr) !important;
@@ -85,5 +86,22 @@ body {
     border-right: 0 !important;
     border-bottom: 1px solid #E6EEEF;
     justify-content: center;
+  }
+}
+
+/* ── Book a Demo responsive ── */
+@media (max-width: 860px) {
+  .lf-cal {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .lf-cal > div:first-child {
+    border-right: 0 !important;
+    border-bottom: 1px solid #D6E3E5;
+  }
+}
+
+@media (max-width: 520px) {
+  .lf-calf {
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 }

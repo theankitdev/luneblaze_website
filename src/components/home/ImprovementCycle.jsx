@@ -46,16 +46,40 @@ function CycleCard({ step }) {
   return (
     <article
       className="rounded-none border border-[#C9D9DC] border-l-[3px] border-l-[#17AEB9] bg-white px-[18px] py-4 transition-[transform,border-color] duration-200 hover:-translate-y-[3px] hover:border-[#17AEB9]"
+      style={{ padding: "16px 18px" }}
     >
       <div className="flex items-center gap-[10px]">
-        <b className="rounded-[3px] bg-[#17AEB9] px-[7px] py-1 text-[12.5px] font-extrabold text-white">
+        <b
+          style={{
+            fontSize: "12.5px",
+            fontWeight: 800,
+            color: "#fff",
+            background: "#17AEB9",
+            padding: "4px 7px",
+            borderRadius: "3px",
+          }}
+        >
           {step.number}
         </b>
-        <h3 className="m-0 text-[18px] font-extrabold text-[#152A2E]">
+        <h3
+          style={{
+            margin: 0,
+            fontWeight: 800,
+            fontSize: "18px",
+            color: "#152A2E",
+          }}
+        >
           {step.title}
         </h3>
       </div>
-      <p className="mt-2 text-[14px] leading-[1.6] text-[#4C6165]">
+      <p
+        style={{
+          margin: "8px 0 0",
+          fontSize: "14px",
+          lineHeight: 1.6,
+          color: "#4C6165",
+        }}
+      >
         {step.description}
       </p>
     </article>
@@ -77,11 +101,74 @@ function CycleDiagram() {
       className="lf-cycR0 relative mx-auto aspect-square w-full"
       style={{ maxWidth: "420px" }}
     >
+      {/* rotating dot layer — outer track */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: "15.9%",
+          borderRadius: "50%",
+          pointerEvents: "none",
+          animation: "lbSpin 12s linear infinite",
+          zIndex: 2,
+        }}
+      >
+        <span
+          style={{
+            position: "absolute",
+            top: "-10px",
+            left: "50%",
+            marginLeft: "-10px",
+            width: "20px",
+            height: "20px",
+            borderRadius: "50%",
+            background: "#17AEB9",
+            boxShadow:
+              "0 0 0 6px rgba(23,174,185,.22), 0 0 18px rgba(23,174,185,.7)",
+          }}
+        />
+        <span
+          style={{
+            position: "absolute",
+            top: "2px",
+            left: "36%",
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            background: "rgba(23,174,185,.45)",
+          }}
+        />
+        <span
+          style={{
+            position: "absolute",
+            top: "12px",
+            left: "24%",
+            width: "6px",
+            height: "6px",
+            borderRadius: "50%",
+            background: "rgba(23,174,185,.25)",
+          }}
+        />
+      </div>
+
+      {/* reverse-spinning dashed ring */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: "6%",
+          border: "1px dashed rgba(23,174,185,.35)",
+          borderRadius: "50%",
+          pointerEvents: "none",
+          animation: "lbSpinRev 40s linear infinite",
+        }}
+      />
+
       <svg
         viewBox="-20 -20 440 440"
         role="img"
         aria-label="Assess, Document, Evidence, Review, Monitor, Improve — and back to Assess"
-        className="h-full w-full overflow-visible"
+        style={{ width: "100%", height: "100%", overflow: "visible" }}
       >
         <defs>
           <marker
@@ -159,8 +246,12 @@ function CycleDiagram() {
 export default function ImprovementCycle() {
   return (
     <section
-      className="relative overflow-hidden border-b border-[#D6E3E5] bg-white px-[clamp(16px,3vw,32px)] py-[clamp(28px,3.4vw,48px)]"
-      style={{ paddingBottom: "clamp(32px,3.6vw,52px)" }}
+      className="relative overflow-hidden"
+      style={{
+        padding: "clamp(28px, 3.4vw, 48px) clamp(16px, 3vw, 32px) clamp(32px, 3.6vw, 52px)",
+        background: "#fff",
+        borderBottom: "1px solid #D6E3E5",
+      }}
     >
       {/* decorative bg */}
       <div
@@ -168,10 +259,11 @@ export default function ImprovementCycle() {
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
         <div
-          className="absolute inset-0 opacity-[0.36]"
+          className="absolute inset-0"
           style={{
+            opacity: 0.36,
             backgroundImage:
-              "radial-gradient(circle,rgba(23,174,185,.18) 1.1px,transparent 1.1px)",
+              "radial-gradient(circle, rgba(23,174,185,.18) 1.1px, transparent 1.1px)",
             backgroundSize: "28px 28px",
             animation: "lbGridPan 42s linear infinite",
           }}
@@ -181,8 +273,8 @@ export default function ImprovementCycle() {
           style={{
             top: "-18%",
             right: "-8%",
-            width: "min(460px,48vw)",
-            height: "min(460px,48vw)",
+            width: "min(460px, 48vw)",
+            height: "min(460px, 48vw)",
             animation: "lbSpin 120s linear infinite",
           }}
         >
@@ -215,7 +307,13 @@ export default function ImprovementCycle() {
               Assessment to improvement
             </span>
           </div>
-          <h2 className="mt-3 text-balance text-[clamp(28px,3.4vw,46px)] font-extrabold leading-[1.1] tracking-[-.03em] text-[#152A2E]">
+          <h2
+            className="mt-3 font-extrabold leading-[1.1] tracking-[-.03em] text-[#152A2E]"
+            style={{
+              fontSize: "clamp(28px, 3.4vw, 46px)",
+              textWrap: "balance",
+            }}
+          >
             A continuous cycle.{" "}
             <span className="text-[#17AEB9]">
               A stronger institution every time.
@@ -225,14 +323,16 @@ export default function ImprovementCycle() {
 
         {/* cycle layout */}
         <div
-          className="lf-cyc mt-[clamp(28px,4vw,48px)] grid items-center gap-[clamp(16px,2.4vw,32px)]"
+          className="lf-cyc grid items-center"
           style={{
+            marginTop: "clamp(28px, 4vw, 48px)",
             gridTemplateColumns:
               "minmax(0,1fr) minmax(280px,420px) minmax(0,1fr)",
+            gap: "clamp(16px, 2.4vw, 32px)",
           }}
         >
           {/* left column — 06, 05, 04 (bottom to top) */}
-          <div className="lf-cycL grid gap-[14px]">
+          <div className="lf-cycL grid" style={{ gap: "14px" }}>
             {cycleL.map((step) => (
               <CycleCard key={step.number} step={step} />
             ))}
@@ -242,7 +342,7 @@ export default function ImprovementCycle() {
           <CycleDiagram />
 
           {/* right column — 01, 02, 03 (top to bottom) */}
-          <div className="lf-cycR grid gap-[14px]">
+          <div className="lf-cycR grid" style={{ gap: "14px" }}>
             {cycleR.map((step) => (
               <CycleCard key={step.number} step={step} />
             ))}

@@ -40,11 +40,8 @@ export default function ValuesSection() {
       id="values"
       style={{
         position: "relative",
-        margin: "clamp(10px,1.5vw,20px)",
         padding: "clamp(46px,5vw,76px) clamp(20px,4vw,52px)",
-        background: "#EDF7F8",
-        border: "1px solid #DBEDEF",
-        borderRadius: 10,
+        background: "#FCFDFD",
         overflow: "hidden",
       }}
     >
@@ -63,11 +60,11 @@ export default function ValuesSection() {
       </div>
 
       <div style={{ position: "relative", maxWidth: 1320, margin: "0 auto" }}>
-        <div data-reveal="">
+        <div data-reveal="" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto" }}>
           <h2
             style={{
               margin: 0,
-              fontSize: "clamp(24px,3vw,40px)",
+              fontSize: "clamp(24px,3.08vw,40px)",
               lineHeight: 1.09,
               letterSpacing: "-.032em",
               fontWeight: 800,
@@ -78,8 +75,8 @@ export default function ValuesSection() {
           </h2>
           <p
             style={{
-              margin: "14px 0 0",
-              fontSize: "clamp(14px,1.08vw,16px)",
+              margin: "14px auto 0",
+              fontSize: "clamp(14px,2vw,16px)",
               lineHeight: 1.66,
               color: "#5F7175",
             }}
@@ -106,11 +103,11 @@ export default function ValuesSection() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 12,
+                gap: 13,
                 background: "#fff",
                 border: "1px solid #E4EEEF",
                 borderRadius: 10,
-                padding: "19px 18px",
+                padding: "20px 19px",
                 transition: "transform .3s cubic-bezier(.22,.8,.2,1),border-color .3s ease,box-shadow .3s ease",
               }}
               onMouseEnter={(e) => {
@@ -129,23 +126,23 @@ export default function ValuesSection() {
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  width: 34,
-                  height: 34,
+                  width: 37,
+                  height: 37,
                   flex: "none",
                   borderRadius: 10,
                   background: "#E4F5F6",
                   color: "#0E8B95",
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: 800,
                 }}
               >
                 {c.n}
               </span>
               <div>
-                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, letterSpacing: "-.015em", color: "#152A2E" }}>
+                <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, letterSpacing: "-.015em", color: "#152A2E" }}>
                   {c.title}
                 </h3>
-                <p style={{ margin: "7px 0 0", fontSize: 13, lineHeight: 1.6, color: "#5F7175" }}>
+                <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.6, color: "#5F7175" }}>
                   {c.desc}
                 </p>
               </div>

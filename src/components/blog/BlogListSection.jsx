@@ -29,11 +29,11 @@ const FILTERS = [
 
 const PAGE_SIZE = 6;
 
-export default function BlogListSection() {
+export default function BlogListSection({items = ALL_POSTS}) {
   const [filter, setFilter] = useState("all");
   const [limit, setLimit] = useState(PAGE_SIZE);
 
-  const matching = filter === "all" ? ALL_POSTS : ALL_POSTS.filter((x) => x.cat === filter);
+  const matching = filter === "all" ? items : items.filter((x) => x.cat === filter);
   const shown = matching.slice(0, limit);
   const moreLeft = matching.length > shown.length;
   const allShown = matching.length > 0 && matching.length <= shown.length;
@@ -43,7 +43,7 @@ export default function BlogListSection() {
   const filters = FILTERS.map(([key, label]) => ({
     key,
     label,
-    count: key === "all" ? ALL_POSTS.length : ALL_POSTS.filter((x) => x.cat === key).length,
+    count: key === "all" ? items.length : items.filter((x) => x.cat === key).length,
     on: key === filter,
     pick: () => {
       setFilter(key);
@@ -61,7 +61,7 @@ export default function BlogListSection() {
       style={{
         position: "relative",
         padding: "clamp(38px,4.4vw,64px) clamp(20px,4vw,52px)",
-        background: "#FCFDFD",
+        background: "#F9FCFD",
         overflow: "hidden",
       }}
     >
@@ -183,7 +183,7 @@ export default function BlogListSection() {
                   background: "#17AEB9",
                   color: "#fff",
                   border: "none",
-                  borderRadius: 999,
+                  borderRadius: 10,
                   padding: "14px 27px",
                   fontSize: 14.5,
                   fontWeight: 700,

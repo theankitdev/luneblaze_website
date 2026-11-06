@@ -28,7 +28,7 @@ body {
   background: #b7e2e5;
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
@@ -36,7 +36,7 @@ body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-}
+} */
 
 /* ── Keyframes ── */
 @keyframes lbFloat {
@@ -75,6 +75,31 @@ body {
 @keyframes lfMarq {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+@keyframes lbPulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+@keyframes lfTlGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes lfTlRun{0%{left:0%;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:100%;opacity:0}}
+@keyframes lfTlPop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.lf-tl-node:hover{transform:scale(1.12)}
+@keyframes lfTlRunTransform {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  92% {
+    opacity: 1;
+  }
+
+  100% {
+    left: calc(100% - 14px);
+    opacity: 0;
+  }
 }
 
 /* ── Trust strip mobile ── */

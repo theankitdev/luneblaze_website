@@ -30,10 +30,7 @@ export default function AdvisorsSection() {
       id="advisors"
       style={{
         position: "relative",
-        margin: "clamp(10px,1.5vw,20px) clamp(10px,1.5vw,20px) 0",
         background: "#FCFDFD",
-        border: "1px solid #DCEAEC",
-        borderRadius: 10,
         overflow: "hidden",
       }}
     >

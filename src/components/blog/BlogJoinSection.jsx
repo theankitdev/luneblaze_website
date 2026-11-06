@@ -1,14 +1,22 @@
 // src/components/blog/BlogJoinSection.jsx
 "use client";
 
-export default function BlogJoinSection() {
+export default function BlogJoinSection({
+  title = "New Posts on WhatsApp",
+  description = "Join the Luneblaze quality group and get new guides, templates and practice notes as they are published — alongside coordinators working through the same problems.",
+  whatsappHref = "https://wa.me/918810418840?text=Hi%20Luneblaze%2C%20please%20add%20me%20to%20the%20quality%20WhatsApp%20group.",
+  whatsappLabel = "Join the WhatsApp Group",
+  newsletterHref = "https://www.linkedin.com/newsletters/7125753253224493056/",
+  newsletterLabel = "Email newsletter instead",
+  background = "#EDF7F8",
+}) {
   return (
     <section
       id="join"
       style={{
         position: "relative",
         padding: "clamp(42px,4.8vw,72px) clamp(20px,4vw,52px)",
-        background: "#EDF7F8",
+        background: "#FCFDFD",
         overflow: "hidden",
       }}
     >
@@ -46,14 +54,14 @@ export default function BlogJoinSection() {
           </svg>
         </span>
         <h2 style={{ margin: "18px 0 0", fontSize: "clamp(24px,3vw,38px)", lineHeight: 1.1, letterSpacing: "-.032em", fontWeight: 800, color: "#152A2E" }}>
-          New Posts on WhatsApp
+          {title}
         </h2>
         <p style={{ margin: "14px auto 0", maxWidth: "56ch", fontSize: "clamp(14px,1.08vw,16.5px)", lineHeight: 1.65, color: "#5F7175" }}>
-          Join the Luneblaze quality group and get new guides, templates and practice notes as they are published — alongside coordinators working through the same problems.
+          {description}
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginTop: 26 }}>
           <a
-            href="https://wa.me/918810418840?text=Hi%20Luneblaze%2C%20please%20add%20me%20to%20the%20quality%20WhatsApp%20group."
+            href={whatsappHref}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -71,14 +79,14 @@ export default function BlogJoinSection() {
             onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-3px)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "none")}
           >
-            Join the WhatsApp Group
+            {whatsappLabel}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 12h14" />
               <path d="M12 6l6 6-6 6" />
             </svg>
           </a>
           <a
-            href="https://www.linkedin.com/newsletters/7125753253224493056/"
+            href={newsletterHref}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -102,7 +110,7 @@ export default function BlogJoinSection() {
               e.currentTarget.style.borderColor = "#CFE8EA";
             }}
           >
-            Email newsletter instead
+            {newsletterLabel}
           </a>
         </div>
       </div>

@@ -31,11 +31,8 @@ export default function TeamSection() {
       id="team"
       style={{
         position: "relative",
-        margin: "0 clamp(10px,1.5vw,20px)",
         padding: "clamp(44px,5vw,74px) clamp(20px,4vw,52px)",
         background: "#FCFDFD",
-        border: "1px solid #E4EEEF",
-        borderRadius: 10,
         overflow: "hidden",
       }}
     >
@@ -54,11 +51,11 @@ export default function TeamSection() {
       </div>
 
       <div style={{ position: "relative", maxWidth: 1320, margin: "0 auto" }}>
-        <div data-reveal="" style={{ maxWidth: 680 }}>
+        <div data-reveal="" style={{ textAlign: "center", maxWidth: 680, margin: "0 auto" }}>
           <h2
             style={{
               margin: 0,
-              fontSize: "clamp(24px,3vw,40px)",
+              fontSize: "clamp(24px,3.08vw,40px)",
               lineHeight: 1.09,
               letterSpacing: "-.032em",
               fontWeight: 800,
@@ -67,7 +64,7 @@ export default function TeamSection() {
           >
             The Team
           </h2>
-          <p style={{ margin: "14px 0 0", fontSize: "clamp(14px,1.08vw,16px)", lineHeight: 1.66, color: "#5F7175" }}>
+          <p style={{ margin: "14px auto 0", fontSize: "clamp(14px,2vw,16px)", lineHeight: 1.66, color: "#5F7175" }}>
             A small team working directly with institutions on the quality work itself.
           </p>
         </div>

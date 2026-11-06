@@ -1,7 +1,7 @@
 
 import AdvisorsBand from "@/components/school-quality/AdvisorsBand";
 import AdvisorsScroller from "@/components/school-quality/AdvisorsScrollar";
-import FrameworkSection from "@/components/sections/FrameworkSection";
+import FrameworkSection from "@/components/sections/ChooseFrameworkSection";
 import CommunitySection from "@/components/sections/CommunitySection";
 import ImplementationJourney from "@/components/school-quality/ImplementationJourney";
 import PeopleBehindProcess from "@/components/school-quality/PeopleBehindProcess";

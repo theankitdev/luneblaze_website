@@ -1,4 +1,4 @@
-// src/components/shared/ChooseFrameworkSection.jsx
+
 import Link from "next/link";
 
 export default function FrameworkSection({

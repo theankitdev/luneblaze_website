@@ -7,7 +7,7 @@ export default function AboutHero() {
       id="hero"
       style={{
         position: "relative",
-        padding: "clamp(112px,12vw,150px) clamp(20px,4vw,52px) clamp(40px,4.6vw,64px)",
+        padding: "clamp(60px,5vw,150px) clamp(20px,4vw,52px) clamp(40px,4.6vw,64px)",
         overflow: "hidden",
         background: "#fff",
         borderBottom: "1px solid #D6E3E5",
@@ -42,7 +42,7 @@ export default function AboutHero() {
         </div>
       </div>
 
-      <div style={{ position: "relative", maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
+      <div style={{ position: "relative", textAlign: "center" }}>
         <span
           style={{
             display: "inline-flex",
@@ -65,7 +65,7 @@ export default function AboutHero() {
         <h1
           style={{
             margin: "20px 0 0",
-            fontSize: "clamp(32px,4.4vw,58px)",
+            fontSize: "clamp(32px,3.8vw,58px)",
             lineHeight: 1.05,
             letterSpacing: "-.036em",
             fontWeight: 800,

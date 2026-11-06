@@ -1,6 +1,6 @@
 import HeroSection from "@/components/heis/HeroSection";
 import QualityMattersSection from "@/components/sections/QualityMattersSection";
-import FrameworkSection from "@/components/sections/FrameworkSection";
+import FrameworkSection from "@/components/sections/ChooseFrameworkSection";
 import FeatureGridSection from "@/components/heis/FeatureGridSection";
 import OneInstitutionDifferentPurposes from "@/components/heis/OneInstitutionDifferentPurposes";
 import AdvisorsBand from "@/components/school-quality/AdvisorsBand";

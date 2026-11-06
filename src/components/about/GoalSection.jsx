@@ -108,11 +108,8 @@ export default function GoalSection() {
       id="goal"
       style={{
         position: "relative",
-        margin: "clamp(10px,1.5vw,20px)",
         padding: "clamp(46px,5vw,76px) clamp(20px,4vw,52px)",
-        background: "#EDF7F8",
-        border: "1px solid #DBEDEF",
-        borderRadius: 10,
+        background: "#FCFDFD",
         overflow: "hidden",
       }}
     >

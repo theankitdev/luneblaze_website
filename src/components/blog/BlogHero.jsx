@@ -3,7 +3,12 @@
 
 import Link from "next/link";
 
-export default function BlogHero() {
+export default function BlogHero({
+  breadcrumb = "Blogs",
+  title = "Practical Knowledge.",
+  highlight = "Stronger Institutional Systems",
+  subtitle = "Explore guidance on assessment, evidence, team ownership and continuous improvement for schools and higher education.",
+}) {
   return (
     <section
       style={{
@@ -15,10 +20,7 @@ export default function BlogHero() {
         borderBottom: "1px solid #D6E3E5",
       }}
     >
-      <div
-        aria-hidden="true"
-        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
-      >
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
         <div
           style={{
             position: "absolute",
@@ -50,20 +52,20 @@ export default function BlogHero() {
         <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 12, fontWeight: 600, color: "#5F7175" }}>
           <Link href="/" style={{ color: "#5F7175" }}>Home</Link>
           <span aria-hidden="true" style={{ color: "#B6CDD0" }}>/</span>
-          <span style={{ color: "#0E8B95", fontWeight: 700 }}>Blogs</span>
+          <span style={{ color: "#0E8B95", fontWeight: 700 }}>{breadcrumb}</span>
         </div>
         <h1
           style={{
             margin: "18px 0 0",
-            fontSize: "clamp(32px,4.4vw,58px)",
+            fontSize: "clamp(32px,3.8vw,58px)",
             lineHeight: 1.05,
             letterSpacing: "-.036em",
             fontWeight: 800,
             color: "#152A2E",
           }}
         >
-          Practical Knowledge.{" "}
-          <span style={{ color: "#17AEB9" }}>Stronger Institutional Systems</span>
+          {title}{" "}
+          <span style={{ color: "#17AEB9" }}>{highlight}</span>
         </h1>
         <p
           style={{
@@ -74,8 +76,7 @@ export default function BlogHero() {
             color: "#4C6165",
           }}
         >
-          Explore guidance on assessment, evidence, team ownership and continuous
-          improvement for schools and higher education.
+          {subtitle}
         </p>
       </div>
     </section>

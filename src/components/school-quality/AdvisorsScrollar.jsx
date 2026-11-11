@@ -61,7 +61,7 @@ export default function AdvisorsScroller() {
             />
             Guided by our advisors
           </span>
-          <h2 className="mx-auto mt-3 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-[#152A2E] sm:text-4xl lg:text-5xl">
+          <h2 className="mx-auto mt-3  text-3xl font-extrabold leading-tight tracking-tight text-[#152A2E] sm:text-4xl lg:text-5xl">
             Guided by Experience.{" "}
             <span className="text-[#17AEB9]">Strengthened by Expertise.</span>
           </h2>

@@ -6,143 +6,15 @@ import FrameworkFilm from "@/components/framework/FrameworkFilm";
 import FrameworkSplit from "@/components/framework/FrameworkSplit";
 import FrameworkPillars from "@/components/framework/FrameworkPillars";
 import InsidePlatform from "@/components/framework/InsidePlatform";
-import FrameworkFlow from "@/components/framework/FrameworkFlow";
-import FrameworkAdvisors from "@/components/framework/FrameworkAdvisors";
-import FrameworkTestimonials from "@/components/framework/FrameworkTestimonials";
-import FrameworkCTA from "@/components/framework/FrameworkCTA";
-
+import FrameworkAlso from "@/components/framework/FrameworkAlso";
 import FrameworkSection from "@/components/sections/ChooseFrameworkSection";
 import CommunitySection from "@/components/sections/CommunitySection";
 import KnowledgeSection from "@/components/sections/KnowledgeSection";
 import ClientsStrip from "@/components/sections/ClientsStrip";
+import AdvisorsScroller from "@/components/school-quality/AdvisorsScrollar";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import FinalCTA from "@/components/sections/FinalCTA";
 
-const ADVISORS = [
-  {
-    name: "Ms. Kalyani Dixit",
-    role: "Former Founder · Principal and Director",
-    img: "/assets/advisor-1.png",
-  },
-  {
-    name: "Ms. Mini Johny",
-    role: "Master Trainer – CBSE · District Coordinator for Training CoE Bengaluru",
-    img: "/assets/advisor-2.png",
-  },
-  {
-    name: "Dr. Kshma Swarnkar",
-    role: "CBSE Resource Person · AI & Edtech Expert",
-    img: "/assets/advisor-3.png",
-  },
-  {
-    name: "Ms. Archana Awade",
-    role: "General Manager – Aditya Birla Education Academy",
-    img: "/assets/advisor-4.png",
-  },
-  {
-    name: "Ms. Sumithra Singh",
-    role: "Academic Consultant & Teacher Trainer",
-    img: "/assets/advisor-5.png",
-  },
-  {
-    name: "Mr. Naresh Sharma",
-    role: "CBSE Resource Person · UNESCO Health and Wellness Master Trainer",
-    img: "/assets/advisor-6.png",
-  },
-  {
-    name: "Ms. Manjit Malik",
-    role: "Academic Auditor · Education & School Quality Consultant",
-    img: "/assets/advisor-7.png",
-  },
-  {
-    name: "Dr. Rakhee Chaudhary",
-    role: "Accreditation & Quality Assurance Expert",
-    img: "/assets/advisor-8.png",
-  },
-  {
-    name: "Mr. Narender Kumar",
-    role: "CBSE Master Trainer & Lead Facilitator",
-    img: "/assets/advisor-9.png",
-  },
-  {
-    name: "Dr. Deepti Chaturvedi",
-    role: "CBSE Resource Person · Founder Principal",
-    img: "/assets/advisor-10.png",
-  },
-  {
-    name: "Dr. Abhishek Sharma",
-    role: "Advanced Lean Six Sigma Certified Trainer",
-    img: "/assets/advisor-11.png",
-  },
-  {
-    name: "Dr. Manjari Tejpal",
-    role: "CBSE Resource Person & SQAAF Trainer",
-    img: "/assets/advisor-12.png",
-  },
-  {
-    name: "Mr. Jeeson Sunny",
-    role: "CBSE SQAAF – PAT Member",
-    img: "/assets/advisor-13.png",
-  },
-  {
-    name: "Ms. Mohita Jain",
-    role: "CBSE Resource Person · Career and Guidance Counsellor",
-    img: "/assets/advisor-14.png",
-  },
-  {
-    name: "Dr. Jyoti Prakash Tripathy",
-    role: "CBSE Resource Person, District Coordinator",
-    img: "/assets/advisor-15.png",
-  },
-  {
-    name: "Dr. Bani Godara",
-    role: "CBSE School Principal · CBSE Manual Reviewer",
-    img: "/assets/advisor-16.png",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: "Mohammad Gaffar",
-    role: "Principal · AL AIN Juniors School, UAE",
-    quote:
-      "Luneblaze's guidance during our SQAAF implementation was invaluable. Their structured documentation support, responsive team, and user-friendly portal made the entire process smooth and efficient.",
-    img: "/assets/testimonial-1.png",
-  },
-  {
-    name: "Kusum K P",
-    role: "Principal · SMS Academy of Central Education, Karnataka",
-    quote:
-      "Our SQAAF implementation gained clarity and momentum after partnering with Luneblaze. The structured portal, intuitive dashboard, and timely support helped our team stay aligned with CBSE timelines and manage documentation efficiently.",
-    img: "/assets/testimonial-2.png",
-  },
-  {
-    name: "Fr. Roy D'Sa",
-    role: "Principal · Fr. Agnel Group of Schools",
-    quote:
-      "Luneblaze's support during our SQAAF implementation was invaluable. Their structured documentation system and intuitive platform made compliance manageable and efficient for our team.",
-    img: "/assets/testimonial-3.png",
-  },
-  {
-    name: "Dr. Andrew Aohato",
-    role: "Principal · Livingstone Foundation International School, Nagaland",
-    quote:
-      "Luneblaze has been an integral part of our SQAAF journey. Their tech-based platform streamlined automation and documentation, providing well-structured, tailored solutions that made accreditation implementation seamless.",
-    img: "/assets/testimonial-4.png",
-  },
-  {
-    name: "Pradumna Chaturvedi",
-    role: "Managing Director · Gayatri Group of Schools, Agra",
-    quote:
-      "Luneblaze has brought structure and clarity to our quality assurance journey. The user-friendly portal, streamlined documentation, progress tracking, and timely expert support have helped us manage SQAAF requirements more effectively.",
-    img: "/assets/testimonial-5.png",
-  },
-  {
-    name: "Vandana Bhatia",
-    role: "Principal · Holy Child Group of Schools",
-    quote:
-      "Luneblaze's technology-driven systems have streamlined our accreditation and assessment processes, significantly enhancing quality and efficiency in our school.",
-    img: "/assets/testimonial-6.png",
-  },
-];
 
 const SCHOOL_CLIENTS = [
   {
@@ -310,8 +182,6 @@ export default function Page() {
         ]}
       />
 
-      
-
       <FrameworkSection
         eyebrow="The core problem"
         heading="The Challenges"
@@ -350,9 +220,11 @@ export default function Page() {
         headingHighlight="Solution"
         description="One structured system for every quality requirement. Luneblaze brings technology, expert guidance and institutional processes together so schools implement SQAAF systematically — and keep improving."
         note="Measure quality. Strengthen systems. Improve continuously."
-        image="/assets/lb-homepagebanner.gif"
+        image="/assets/lb-SQAAF.webp"
         ctaLabel="Book a Demo ↗"
-        ctaHref="/book-a-demo"
+        ctaHref="/book-a-demo.html"
+        decorative // enables the grid + ring background
+        tone="light"
         items={[
           {
             title: "Centralized Documentation & Evidence",
@@ -421,63 +293,82 @@ export default function Page() {
       />
 
       <InsidePlatform
-      eyebrow="Inside the platform"
-      heading="What the Luneblaze"
-      headingHighlight="Platform Provides"
-      description="Everything the framework asks of you, in one workspace — and everything your team needs to keep it moving between cycles."
-      videoSrc="assets/hero-video.mp4"
-      ctaText="View Dashboard ↗"
-      ctaHref="https://www.luneblaze.com"
-    />
+        eyebrow="Inside the platform"
+        heading="What the Luneblaze"
+        headingHighlight="Platform Provides"
+        description="Everything the framework asks of you, in one workspace — and everything your team needs to keep it moving between cycles."
+        videoSrc="assets/hero-video.mp4"
+        ctaText="View Dashboard ↗"
+        ctaHref="https://www.luneblaze.com"
+      />
 
-    <FrameworkCTA
+      <FinalCTA
         eyebrow="Your next chapter in quality"
-        heading="See Luneblaze in action for your school"
-        description="See how Luneblaze brings your people, processes and progress together. Start with a walkthrough for your institution."
+        heading="See Luneblaze in action for your school."
+        body="See how Luneblaze brings your people, processes and progress together. Start with a walkthrough for your institution."
         ctaLabel="Book a Demo ↗"
         ctaHref="/book-a-demo"
       />
 
-      <FrameworkFlow
-        eyebrow="How Luneblaze works"
-        heading="Eight steps to"
-        headingHighlight="audit readiness"
-        steps={[
-          "System Setup",
-          "CLT Creation",
-          "Initial Training",
-          "Document & Evidence Creation",
-          "Real-Time Tracking",
-          "Progress Reporting",
-          "Monthly Trainings",
-          "Audit Readiness",
+      <FrameworkAlso
+        id="s-also-nabet"
+        eyebrow="Also working towards NABET?"
+        heading="The same evidence base"
+        headingHighlight="serves both submissions."
+        description="Explore how Luneblaze supports NABET accreditation alongside your SQAAF cycle."
+        tone="light"
+        min="300px"
+        items={[
+          {
+            badge: "SCHOOLS",
+            title: "NABET",
+            sub: "National Accreditation Board for Education and Training",
+            desc: "Accreditation readiness for schools, with criteria-mapped documentation and audit trails.",
+            logo: "/assets/fw-nabet.png",
+            cta: "Visit NABET ↗",
+            href: "/nabet.html",
+          },
         ]}
       />
 
-      <FrameworkAdvisors items={ADVISORS} />
+      <FrameworkSplit
+        eyebrow="For school groups"
+        heading="Monitoring Quality of Group"
+        headingHighlight="Across Groups of Schools"
+        description="Luneblaze enables school groups and franchise networks to monitor quality across every campus, compare performance and coordinate improvement from one dashboard."
+        image="/assets/group-schools.png"
+        ctaLabel="Explore School Groups ↗"
+        ctaHref="/group-of-institutions.html"
+        tone="white" // this section is #fff on the SQAAF page
+        decorative // optional — the source alternates d0/d1 per section index
+        items={[
+          {
+            title: "Monitor Quality on a Single Dashboard",
+            desc: "Every campus, every domain and every standard in one live view for leadership.",
+          },
+          {
+            title: "School Monitoring and Benchmarking",
+            desc: "Rank schools instantly to spot top performers and the campuses needing support.",
+          },
+          {
+            title: "Standards Across All Groups",
+            desc: "One structured system, the same policies and SOPs, applied consistently group-wide.",
+          },
+          {
+            title: "Role-based access",
+            desc: "Group management sees the whole network; each school works inside its own space.",
+          },
+        ]}
+      />
 
-      <FrameworkTestimonials items={TESTIMONIALS} />
+      <AdvisorsScroller />
+      <TestimonialsSection />
 
       <CommunitySection
         eyebrow="Community"
         heading="Join the SQAAF Insights Community"
         description="A working community for coordinators, principals and quality teams — share what you have built, ask what you are stuck on, and keep up with framework changes."
         groupLabel="SQAAF"
-      />
-
-      <FrameworkSection
-        eyebrow="Also working towards NABET?"
-        heading="The same evidence base"
-        headingHighlight="serves both submissions."
-        items={[
-          {
-            title: "NABET",
-            desc: "Accreditation readiness for schools, with criteria-mapped documentation and audit trails.",
-            href: "/nabet",
-            logo: "/assets/fw-nabet.png",
-            cta: "Visit NABET ↗",
-          },
-        ]}
       />
 
       <KnowledgeSection />
@@ -488,13 +379,12 @@ export default function Page() {
         logos={SCHOOL_CLIENTS}
       />
 
-      <FrameworkCTA
+      <FinalCTA
         eyebrow="Book a demo"
         heading="Ready to Simplify Your SQAAF Journey?"
-        description="A 30-minute walkthrough of the dashboard, mapped to where your school is in the framework right now."
+        body="A 30-minute walkthrough of the dashboard, mapped to where your school is in the framework right now."
         ctaLabel="Book a Demo ↗"
         ctaHref="/book-a-demo"
-        email="schools@luneblaze.com"
       />
     </>
   );

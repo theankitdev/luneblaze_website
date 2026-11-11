@@ -2,6 +2,7 @@ import "./globals.css";
 import { Manrope } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import Loader from "@/components/layout/Loader";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -22,11 +23,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
         className={`${manrope.variable} min-h-screen bg-[#F4F8F8] font-sans antialiased`}
       >
         <Header />
         <main>{children}</main>
         <Footer />
+        <Loader />
       </body>
     </html>
   );

@@ -1,5 +1,14 @@
-
+// src/components/sections/FrameworkSection.jsx
 import Link from "next/link";
+
+const COLS_CLASS = {
+  1: "xl:grid-cols-1",
+  2: "md:grid-cols-2 xl:grid-cols-2",
+  3: "md:grid-cols-2 xl:grid-cols-3",
+  4: "md:grid-cols-2 xl:grid-cols-4",
+  5: "md:grid-cols-2 xl:grid-cols-5",
+  6: "md:grid-cols-2 xl:grid-cols-6",
+};
 
 export default function FrameworkSection({
   eyebrow,
@@ -9,7 +18,14 @@ export default function FrameworkSection({
   background = "#F4F8F8",
   accentColor = "#17AEB9",
   showDecorativeBg = true,
+  cols,
 }) {
+  const gridCols =
+    COLS_CLASS[cols] ??
+    (items.length === 4
+      ? "md:grid-cols-2 xl:grid-cols-4"
+      : "md:grid-cols-2 xl:grid-cols-3");
+
   return (
     <section
       className="relative overflow-hidden border-b border-[#D6E3E5] px-5 py-16 sm:px-8 lg:py-20"
@@ -66,7 +82,9 @@ export default function FrameworkSection({
         </div>
 
         {/* grid */}
-        <div className="mt-10 grid border border-[#C9D9DC] bg-white sm:mt-12 md:grid-cols-2 xl:grid-cols-3">
+        <div
+          className={`mt-10 grid border border-[#C9D9DC] bg-white sm:mt-12 ${gridCols}`}
+        >
           {items.map((item, i) => {
             const card = (
               <article

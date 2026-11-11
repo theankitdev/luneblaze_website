@@ -100,7 +100,7 @@ export default function CommunitySection({
             />
             {eyebrow}
           </span>
-          <h2 className="mx-auto mt-3 max-w-[720px] text-balance text-[clamp(28px,3.4vw,46px)] font-extrabold leading-[1.1] tracking-[-.03em] text-[#152A2E]">
+          <h2 className="mx-auto mt-3 text-balance text-[clamp(28px,3.4vw,46px)] font-extrabold leading-[1.1] tracking-[-.03em] text-[#152A2E]">
             {heading}
           </h2>
           <p className="mx-auto mt-4 max-w-[700px] text-[17px] leading-[1.7] text-[#4C6165]">

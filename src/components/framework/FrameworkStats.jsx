@@ -8,12 +8,15 @@ export default function FrameworkStats({
   description,
   stats = [],
   wheelRing,
+  wheel,
   wheelTitle,
   wheelLegend = [],
   background = "#F4F8F8",
   accentColor = "#17AEB9",
 }) {
   const wheelColors = ["#F4A97F", "#A9CFC0", "#F0676B", "#F5CF68", "#7FD4A8"];
+  const hasWheel = wheelRing || wheel;
+
   return (
     <section className="relative overflow-hidden border-b border-[#D6E3E5] px-5 py-16 sm:px-8 lg:py-20" style={{ background }}>
       <div className="relative mx-auto max-w-7xl">
@@ -42,17 +45,30 @@ export default function FrameworkStats({
         </div>
 
         {/* Wheel + legend */}
-        {wheelRing && (
+        {hasWheel && (
           <div className="mt-5 grid items-center gap-6 border border-[#C9D9DC] bg-[#F4F8F8] p-6 lg:grid-cols-[1.5fr_1fr] lg:gap-11 lg:p-10">
             <div className="relative mx-auto w-full max-w-[640px]">
-              <div className="relative w-full" style={{ aspectRatio: "1140/920" }}>
-                <iframe
-                  src={wheelRing}
-                  title={wheelTitle}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full border-0"
+              {wheelRing ? (
+                <div className="relative w-full" style={{ aspectRatio: "1140/920" }}>
+                  <iframe
+                    src={wheelRing}
+                    title={wheelTitle}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full border-0"
+                  />
+                </div>
+              ) : (
+                <div
+                  role="img"
+                  aria-label={wheelTitle}
+                  className="w-full"
+                  style={{
+                    aspectRatio: "1140/840",
+                    background: `url('${wheel}') center/contain no-repeat`,
+                    animation: "lbFloat 9s ease-in-out infinite",
+                  }}
                 />
-              </div>
+              )}
             </div>
             <div>
               <div className="text-base font-extrabold text-[#152A2E]">{wheelTitle}</div>

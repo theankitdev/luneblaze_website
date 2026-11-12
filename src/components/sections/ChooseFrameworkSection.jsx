@@ -14,6 +14,7 @@ export default function FrameworkSection({
   eyebrow,
   heading,
   headingHighlight,
+  description,
   items = [],
   background = "#F4F8F8",
   accentColor = "#17AEB9",
@@ -79,6 +80,11 @@ export default function FrameworkSection({
             {heading}{" "}
             <span style={{ color: accentColor }}>{headingHighlight}</span>
           </h2>
+          {description && (
+            <p className="mx-auto mt-4 max-w-3xl text-[17px] leading-[1.7] text-[#4C6165]">
+              {description}
+            </p>
+          )}
         </div>
 
         {/* grid */}
@@ -116,9 +122,11 @@ export default function FrameworkSection({
                 <h3 className="mt-4 text-[clamp(19px,1.7vw,22px)] font-extrabold leading-tight tracking-tight text-[#152A2E]">
                   {item.title}
                 </h3>
-                <p className="mt-2.5 flex-1 text-[15px] leading-6 text-[#4C6165]">
-                  {item.desc}
-                </p>
+                {item.desc && (
+                  <p className="mt-2.5 flex-1 text-[15px] leading-6 text-[#4C6165]">
+                    {item.desc}
+                  </p>
+                )}
                 {item.cta && (
                   <span className="mt-auto pt-5 text-[15px] font-bold text-[#0E8B95]">
                     {item.cta}

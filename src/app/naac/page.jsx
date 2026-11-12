@@ -78,6 +78,7 @@ export default function Page() {
 
       {/* About the NAAC Framework */}
       <FrameworkStats
+      background="#F4F8F8"
         eyebrow="Seven criteria"
         heading="About the"
         headingHighlight="NAAC Framework"
@@ -129,7 +130,35 @@ export default function Page() {
           { label: "Governance, Leadership & Management", pct: 10 },
           { label: "Institutional Values & Best Practices", pct: 10 },
         ]}
+        
+      />
+
+      {/* Why NAAC matters */}
+      <FrameworkSection
         background="#FFFFFF"
+        eyebrow="Why it matters"
+        heading="Why NAAC Accreditation"
+        headingHighlight="Matters"
+        description="It is not a form-filling exercise. Done properly, NAAC changes how an institution sees itself — and gives leadership a defensible picture of where it stands."
+        cols={4}
+        items={[
+          {
+            title: "Eligibility and funding",
+            desc: "Accreditation status governs autonomy, UGC schemes and a range of funding routes.",
+          },
+          {
+            title: "Metric-linked evidence",
+            desc: "Every claim is tied to the metric it answers, so DVV clarifications are straightforward.",
+          },
+          {
+            title: "Institutional clarity",
+            desc: "Criteria-wise scoring shows leadership precisely where the institution is strong and where it is not.",
+          },
+          {
+            title: "A repeatable cycle",
+            desc: "AQAR reporting becomes continuous rather than a once-in-five-years effort.",
+          },
+        ]}
       />
 
       {/* What's new — Binary Accreditation */}
@@ -160,34 +189,6 @@ export default function Page() {
           {
             title: "95%+ Coverage Target",
             desc: "Across higher education institutions",
-          },
-        ]}
-      />
-
-      {/* Why NAAC matters */}
-      <FrameworkSection
-        background="#FFFFFF"
-        eyebrow="Why it matters"
-        heading="Why NAAC Accreditation"
-        headingHighlight="Matters"
-        description="It is not a form-filling exercise. Done properly, NAAC changes how an institution sees itself — and gives leadership a defensible picture of where it stands."
-        cols={4}
-        items={[
-          {
-            title: "Eligibility and funding",
-            desc: "Accreditation status governs autonomy, UGC schemes and a range of funding routes.",
-          },
-          {
-            title: "Metric-linked evidence",
-            desc: "Every claim is tied to the metric it answers, so DVV clarifications are straightforward.",
-          },
-          {
-            title: "Institutional clarity",
-            desc: "Criteria-wise scoring shows leadership precisely where the institution is strong and where it is not.",
-          },
-          {
-            title: "A repeatable cycle",
-            desc: "AQAR reporting becomes continuous rather than a once-in-five-years effort.",
           },
         ]}
       />
@@ -306,12 +307,6 @@ export default function Page() {
       />
 
       <KnowledgeSection />
-
-      <ClientsStrip
-        title="Our clients"
-        subtitle="Institutions across India, Nigeria & the UAE"
-        logos={COLLEGE_CLIENTS}
-      />
 
       <FinalCTA
         eyebrow="Book a demo"

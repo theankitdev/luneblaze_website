@@ -334,7 +334,7 @@ export default function JobOpeningPage({ params }) {
                   ))}
                 </div>
                 <Link
-                  href={`/careers/${slug}/apply`}
+                  href={`/career/${slug}/apply`}
                   className="mt-4 flex w-full items-center justify-center gap-[9px] rounded-[4px] bg-[#17AEB9] px-5 py-[13px] text-[13.5px] font-extrabold tracking-[0.02em] text-white shadow-[0_12px_26px_-12px_rgba(23,174,185,0.85)] transition-transform hover:-translate-y-[3px]"
                 >
                   APPLY FOR THIS ROLE

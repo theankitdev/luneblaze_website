@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function BlogCard({ item }) {
   return (
     <Link
-      href={item.slug ? `/blog/${item.slug}` : item.href}
+      href={item.href || `/blog/${item.slug}`}
       style={{
         display: "flex",
         flexDirection: "column",

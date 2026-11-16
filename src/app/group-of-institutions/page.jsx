@@ -1,25 +1,47 @@
+
 import GroupHero from "@/components/group/GroupHero";
 import FeatureGridSection from "@/components/heis/FeatureGridSection";
 import GroupIntroSection from "@/components/group/GroupIntroSection";
 import PillarGridSection from "@/components/group/PillarGridSection";
 import ReadinessScoreSection from "@/components/group/ReadinessScoreSection";
 import BeyondSqaafSection from "../../components/group/BeyondSqaafSection";
-import KnowledgeSection from "@/components/sections/KnowledgeSection";
-import ClientsStrip from "@/components/sections/ClientsStrip";
-import FinalCTA from "@/components/sections/FinalCTA";
+import KnowledgeSection from "@/components/shared/KnowledgeSection";
+import ClientsStrip from "@/components/shared/ClientsStrip";
+import FinalCTA from "@/components/shared/FinalCTA";
 import GdashSection from "@/components/group/GdashSection";
+import logoService from "@/services/logoService";
 
-const GROUP_CLIENTS = [
-  { name: "Father Agnel Group of Schools", img: "/assets/client-father-agnel.png" },
-  { name: "Shalom Group of Schools",       img: "/assets/client-shalom.png" },
-  { name: "Gayatri Group of Schools",      img: "/assets/client-gayatri.png" },
-  { name: "Holy Child Group of Schools",   img: "/assets/client-holy-child.png" },
-];
+export default async function GroupOfInstitutionsPage() {
+  let groupClients = [];
 
-export default function GroupOfInstitutionsPage() {
+  try {
+    const response = await logoService.getAllLogos(1, 100);
+
+    if (
+      response?.status === "success" &&
+      Array.isArray(response?.data)
+    ) {
+      groupClients = response.data
+        .filter(
+          (logo) =>
+            String(logo.logo_type).toLowerCase() === "school"
+        )
+        .map((logo) => ({
+          name: logo.logo_name,
+          img: logoService.getLogoUrl(
+            logo.logo_uri,
+            response.host
+          ),
+        }));
+    }
+  } catch (error) {
+    console.error("Failed to fetch group client logos:", error);
+  }
+
   return (
     <main>
       <GroupHero />
+
       <FeatureGridSection
         eyebrow="Why group-wide governance matters"
         heading="Long-term groups are built on"
@@ -50,18 +72,23 @@ export default function GroupOfInstitutionsPage() {
           },
         ]}
       />
+
       <GroupIntroSection />
       <GdashSection />
       <PillarGridSection />
       <ReadinessScoreSection />
       <BeyondSqaafSection />
       <KnowledgeSection />
-      <ClientsStrip
-        title="Our group clients"
-        subtitle="School groups running multiple campuses"
-        logos={GROUP_CLIENTS}
-        background="#ffffff"
-      />
+
+      {groupClients.length > 0 && (
+        <ClientsStrip
+          title="Our group clients"
+          subtitle="School groups running multiple campuses"
+          logos={groupClients}
+          background="#ffffff"
+        />
+      )}
+
       <FinalCTA
         eyebrow="Your next chapter in quality"
         heading="Bring your whole group onto one dashboard."

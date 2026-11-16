@@ -61,7 +61,7 @@ export default function ClientsStrip({
         >
           <div
             className="flex w-max gap-3 py-4"
-            style={{ animation: "lfMarq 46s linear infinite" }}
+            style={{ animation: "lfMarq 80s linear infinite" }}
           >
             {loop.map((logo, i) => (
               <div

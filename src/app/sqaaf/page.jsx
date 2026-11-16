@@ -1,4 +1,4 @@
-// src/app/sqaaf/page.jsx
+
 import FrameworkHero from "@/components/framework/FrameworkHero";
 import FrameworkTimeline from "@/components/framework/FrameworkTimeline";
 import FrameworkStats from "@/components/framework/FrameworkStats";
@@ -7,43 +7,42 @@ import FrameworkSplit from "@/components/framework/FrameworkSplit";
 import FrameworkPillars from "@/components/framework/FrameworkPillars";
 import InsidePlatform from "@/components/framework/InsidePlatform";
 import FrameworkAlso from "@/components/framework/FrameworkAlso";
-import FrameworkSection from "@/components/sections/ChooseFrameworkSection";
-import CommunitySection from "@/components/sections/CommunitySection";
-import KnowledgeSection from "@/components/sections/KnowledgeSection";
-import ClientsStrip from "@/components/sections/ClientsStrip";
-import AdvisorsScroller from "@/components/school-quality/AdvisorsScrollar";
+import FrameworkSection from "@/components/shared/ChooseFrameworkSection";
+import CommunitySection from "@/components/shared/CommunitySection";
+import KnowledgeSection from "@/components/shared/KnowledgeSection";
+import ClientsStrip from "@/components/shared/ClientsStrip";
+import AdvisorsScroller from "@/components/shared/AdvisorsScrollar";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
-import FinalCTA from "@/components/sections/FinalCTA";
+import FinalCTA from "@/components/shared/FinalCTA";
+import logoService from "@/services/logoService";
 
+export default async function Page() {
+  let schoolLogos = [];
 
-const SCHOOL_CLIENTS = [
-  {
-    name: "Father Agnel Group of Schools",
-    img: "/assets/client-father-agnel.png",
-  },
-  { name: "Shalom Group of Schools", img: "/assets/client-shalom.png" },
-  { name: "Gayatri Group of Schools", img: "/assets/client-gayatri.png" },
-  { name: "Holy Child Group of Schools", img: "/assets/client-holy-child.png" },
-  { name: "GD Goenka School", img: "/assets/client-gd-goenka.png" },
-  { name: "St. Michael's School", img: "/assets/client-st-michaels.png" },
-  { name: "Chinmaya Vidyalaya", img: "/assets/client-chinmaya.png" },
-  { name: "Evergreen Public School", img: "/assets/client-evergreen.png" },
-  {
-    name: "Livingstone Foundation International",
-    img: "/assets/client-livingstone.png",
-  },
-  {
-    name: "SMS Academy of Central Education",
-    img: "/assets/client-sms-academy.png",
-  },
-  {
-    name: "Indian Language School, Nigeria",
-    img: "/assets/client-indian-language.png",
-  },
-  { name: "Al Ain Juniors School, UAE", img: "/assets/client-al-ain.png" },
-];
+  try {
+    const response = await logoService.getAllLogos(1, 100);
 
-export default function Page() {
+    if (
+      response?.status === "success" &&
+      Array.isArray(response?.data)
+    ) {
+      schoolLogos = response.data
+        .filter(
+          (logo) =>
+            String(logo.logo_type).toLowerCase() === "school"
+        )
+        .map((logo) => ({
+          name: logo.logo_name,
+          img: logoService.getLogoUrl(
+            logo.logo_uri,
+            response.host
+          ),
+        }));
+    }
+  } catch (error) {
+    console.error("Failed to fetch school logos:", error);
+  }
+
   return (
     <>
       <FrameworkHero
@@ -52,8 +51,15 @@ export default function Page() {
         headingHighlight="with SQAAF"
         description="School Quality Assessment and Assurance Framework. Bring documents, evidence, team workflows, audits and expert guidance together in one AI-enabled SQAAF implementation solution."
         ctas={[
-          { label: "Book a Demo ↗", href: "/book-a-demo", primary: true },
-          { label: "View Portal", href: "https://www.luneblaze.com" },
+          {
+            label: "Book a Demo ↗",
+            href: "/book-a-demo",
+            primary: true,
+          },
+          {
+            label: "View Portal",
+            href: "https://www.luneblaze.com",
+          },
         ]}
         stats={[
           { value: "100+", label: "Schools Assisted" },
@@ -93,7 +99,10 @@ export default function Page() {
         wheelRing="film/clip.html?s=Domains&d=7.6&hold=4&cx=1290&cy=560&cw=1140&ch=920&clipx=720&bg=none"
         wheelTitle="Seven SQAAF domains · weightage"
         wheelLegend={[
-          { label: "Curriculum, Pedagogy & Assessment", value: "40%" },
+          {
+            label: "Curriculum, Pedagogy & Assessment",
+            value: "40%",
+          },
           { label: "Infrastructure", value: "10%" },
           { label: "Human Resources", value: "10%" },
           { label: "Inclusive Practices", value: "10%" },
@@ -223,7 +232,7 @@ export default function Page() {
         image="/assets/lb-SQAAF.webp"
         ctaLabel="Book a Demo ↗"
         ctaHref="/book-a-demo.html"
-        decorative // enables the grid + ring background
+        decorative
         tone="light"
         items={[
           {
@@ -339,8 +348,8 @@ export default function Page() {
         image="/assets/group-schools.png"
         ctaLabel="Explore School Groups ↗"
         ctaHref="/group-of-institutions.html"
-        tone="white" // this section is #fff on the SQAAF page
-        decorative // optional — the source alternates d0/d1 per section index
+        tone="white"
+        decorative
         items={[
           {
             title: "Monitor Quality on a Single Dashboard",
@@ -362,6 +371,7 @@ export default function Page() {
       />
 
       <AdvisorsScroller />
+
       <TestimonialsSection />
 
       <CommunitySection
@@ -373,11 +383,13 @@ export default function Page() {
 
       <KnowledgeSection />
 
-      <ClientsStrip
-        title="Our school clients"
-        subtitle="Schools across India, Nigeria & the UAE"
-        logos={SCHOOL_CLIENTS}
-      />
+      {schoolLogos.length > 0 && (
+        <ClientsStrip
+          title="Our school clients"
+          subtitle="Schools across India, Nigeria & the UAE"
+          logos={schoolLogos}
+        />
+      )}
 
       <FinalCTA
         eyebrow="Book a demo"

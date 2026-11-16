@@ -87,86 +87,35 @@ function CycleCard({ step }) {
 }
 
 function CycleDiagram() {
+  // All labels sit BELOW their node circle, centered on the node's x.
+  // ly is node.cy + ~48px so there's a clear gap from the r=24 circle.
   const nodes = [
-    { num: "01", label: "Assess", cx: 275, cy: 70.1, tx: 298, ty: 35.3, numColor: "#0E8B95" },
-    { num: "02", label: "Document", cx: 350, cy: 200, tx: 396, ty: 205, numColor: "#0E8B95" },
-    { num: "03", label: "Evidence", cx: 275, cy: 329.9, tx: 298, ty: 374.7, numColor: "#0E8B95" },
-    { num: "04", label: "Review", cx: 125, cy: 329.9, tx: 102, ty: 374.7, numColor: "#0E8B95" },
-    { num: "05", label: "Monitor", cx: 50, cy: 200, tx: 4, ty: 205, numColor: "#0E8B95" },
-    { num: "06", label: "Improve", cx: 125, cy: 70.1, tx: 102, ty: 35.3, numColor: "#0E8B95" },
+    { num: "01", label: "Assess",   cx: 275, cy: 70.1,  lx: 275, ly: 118 },
+    { num: "02", label: "Document", cx: 350, cy: 200,   lx: 350, ly: 248 },  // below, not right
+    { num: "03", label: "Evidence", cx: 275, cy: 329.9, lx: 275, ly: 378 },
+    { num: "04", label: "Review",   cx: 125, cy: 329.9, lx: 125, ly: 378 },
+    { num: "05", label: "Monitor",  cx: 50,  cy: 200,   lx: 50,  ly: 248 },  // below, not left
+    { num: "06", label: "Improve",  cx: 125, cy: 70.1,  lx: 125, ly: 118 },
   ];
 
   return (
-    <div
-      className="relative mx-auto w-full max-w-[420px] aspect-square flex items-center justify-center my-6 lg:my-0 order-first lg:order-none"
-    >
-      {/* rotating dot layer — outer track */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: "15.9%",
-          borderRadius: "50%",
-          pointerEvents: "none",
-          animation: "lbSpin 12s linear infinite",
-          zIndex: 2,
-        }}
-      >
-        <span
-          style={{
-            position: "absolute",
-            top: "-10px",
-            left: "50%",
-            marginLeft: "-10px",
-            width: "20px",
-            height: "20px",
-            borderRadius: "50%",
-            background: "#17AEB9",
-            boxShadow: "0 0 0 6px rgba(23,174,185,.22), 0 0 18px rgba(23,174,185,.7)",
-          }}
-        />
-        <span
-          style={{
-            position: "absolute",
-            top: "2px",
-            left: "36%",
-            width: "10px",
-            height: "10px",
-            borderRadius: "50%",
-            background: "rgba(23,174,185,.45)",
-          }}
-        />
-        <span
-          style={{
-            position: "absolute",
-            top: "12px",
-            left: "24%",
-            width: "6px",
-            height: "6px",
-            borderRadius: "50%",
-            background: "rgba(23,174,185,.25)",
-          }}
-        />
+    <div className="relative mx-auto w-full max-w-[420px] aspect-square flex items-center justify-center my-6 lg:my-0 order-first lg:order-none">
+      {/* rotating dot layer */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: "15.9%", borderRadius: "50%", pointerEvents: "none", animation: "lbSpin 12s linear infinite", zIndex: 2 }}>
+        <span style={{ position: "absolute", top: "-10px", left: "50%", marginLeft: "-10px", width: "20px", height: "20px", borderRadius: "50%", background: "#17AEB9", boxShadow: "0 0 0 6px rgba(23,174,185,.22), 0 0 18px rgba(23,174,185,.7)" }} />
+        <span style={{ position: "absolute", top: "2px", left: "36%", width: "10px", height: "10px", borderRadius: "50%", background: "rgba(23,174,185,.45)" }} />
+        <span style={{ position: "absolute", top: "12px", left: "24%", width: "6px", height: "6px", borderRadius: "50%", background: "rgba(23,174,185,.25)" }} />
       </div>
 
       {/* reverse-spinning dashed ring */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: "6%",
-          border: "1px dashed rgba(23,174,185,.35)",
-          borderRadius: "50%",
-          pointerEvents: "none",
-          animation: "lbSpinRev 40s linear infinite",
-        }}
-      />
+      <div aria-hidden="true" style={{ position: "absolute", inset: "6%", border: "1px dashed rgba(23,174,185,.35)", borderRadius: "50%", pointerEvents: "none", animation: "lbSpinRev 40s linear infinite" }} />
 
       <svg
-        viewBox="-20 -20 440 440"
+        viewBox="-40 -20 480 480"
         role="img"
         aria-label="Assess, Document, Evidence, Review, Monitor, Improve — and back to Assess"
         style={{ width: "100%", height: "100%", overflow: "visible" }}
+        preserveAspectRatio="xMidYMid meet"
       >
         <defs>
           <marker id="lfArr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto">
@@ -174,43 +123,53 @@ function CycleDiagram() {
           </marker>
         </defs>
 
-        <g style={{ transformOrigin: "200px 200px" }}>
+        <g>
           {/* track ring */}
           <circle cx="200" cy="200" r="150" fill="none" stroke="#E3EEF0" strokeWidth="14" />
 
-          {/* arc arrows between nodes */}
+          {/* arc arrows */}
           <path d="M302.3 90.3 A150 150 0 0 1 346.2 166.3" fill="none" stroke="#17AEB9" strokeWidth="4" strokeLinecap="round" markerEnd="url(#lfArr)" />
           <path d="M346.2 233.7 A150 150 0 0 1 302.3 309.7" fill="none" stroke="#17AEB9" strokeWidth="4" strokeLinecap="round" markerEnd="url(#lfArr)" />
           <path d="M243.9 343.4 A150 150 0 0 1 156.1 343.4" fill="none" stroke="#17AEB9" strokeWidth="4" strokeLinecap="round" markerEnd="url(#lfArr)" />
           <path d="M97.7 309.7 A150 150 0 0 1 53.8 233.7" fill="none" stroke="#17AEB9" strokeWidth="4" strokeLinecap="round" markerEnd="url(#lfArr)" />
           <path d="M53.8 166.3 A150 150 0 0 1 97.7 90.3" fill="none" stroke="#17AEB9" strokeWidth="4" strokeLinecap="round" markerEnd="url(#lfArr)" />
-          {/* final dashed arrow from Improve → Assess */}
           <path d="M156.1 56.6 A150 150 0 0 1 243.9 56.6" fill="none" stroke="#0E8B95" strokeWidth="4" strokeLinecap="round" markerEnd="url(#lfArr)" strokeDasharray="7 6" />
 
-          {/* node circles + labels */}
+          {/* node circles + numbers */}
           {nodes.map((n) => (
             <g key={n.num}>
               <circle cx={n.cx} cy={n.cy} r="24" fill="#fff" stroke="#17AEB9" strokeWidth="3" />
-              <text x={n.cx} y={n.cy + 5} textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="15" fontWeight="800" fill={n.numColor}>
+              <text x={n.cx} y={n.cy + 5} textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="15" fontWeight="800" fill="#0E8B95">
                 {n.num}
-              </text>
-              <text x={n.tx} y={n.ty} textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="15" fontWeight="800" fill="#152A2E">
-                {n.label}
               </text>
             </g>
           ))}
 
+          {/* labels — all below their node, centered */}
+          {nodes.map((n) => (
+            <text
+              key={`label-${n.num}`}
+              x={n.lx}
+              y={n.ly}
+              textAnchor="middle"
+              fontFamily="Manrope,Arial,sans-serif"
+              fontSize="15"
+              fontWeight="800"
+              fill="#152A2E"
+              style={{ paintOrder: "stroke" }}
+              stroke="#ffffff"
+              strokeWidth="5"
+              strokeLinejoin="round"
+            >
+              {n.label}
+            </text>
+          ))}
+
           {/* center label */}
           <circle cx="200" cy="200" r="92" fill="#EDF7F8" />
-          <text x="200" y="192" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="17" fontWeight="800" fill="#152A2E">
-            Continuous
-          </text>
-          <text x="200" y="215" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="17" fontWeight="800" fill="#17AEB9">
-            improvement
-          </text>
-          <text x="200" y="240" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="11.5" fontWeight="700" fill="#6A7C80">
-            Improve → Assess
-          </text>
+          <text x="200" y="188" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="17" fontWeight="800" fill="#152A2E">Continuous</text>
+          <text x="200" y="211" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="17" fontWeight="800" fill="#17AEB9">improvement</text>
+          <text x="200" y="236" textAnchor="middle" fontFamily="Manrope,Arial,sans-serif" fontSize="11.5" fontWeight="700" fill="#6A7C80">Improve → Assess</text>
         </g>
       </svg>
     </div>
@@ -283,7 +242,7 @@ export default function ImprovementCycle() {
         </div>
 
         {/* cycle layout - Responsive Grid */}
-        <div className="mt-[clamp(28px,4vw,48px)] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(280px,420px)_minmax(0,1fr)] items-center gap-[clamp(16px,2.4vw,32px)]">
+        <div className="mt-[clamp(28px,4vw,48px)] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(280px,460px)_minmax(0,1fr)] items-center gap-[clamp(16px,1.8vw,32px)]">
           
           {/* left column — 06, 05, 04 (bottom to top) */}
           <div className="order-2 lg:order-1 grid gap-[14px]">

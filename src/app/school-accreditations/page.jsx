@@ -1,18 +1,19 @@
 
 import AdvisorsBand from "@/components/school-quality/AdvisorsBand";
-import AdvisorsScroller from "@/components/school-quality/AdvisorsScrollar";
-import FrameworkSection from "@/components/sections/ChooseFrameworkSection";
-import CommunitySection from "@/components/sections/CommunitySection";
+import AdvisorsScroller from "@/components/shared/AdvisorsScrollar";
+import FrameworkSection from "@/components/shared/ChooseFrameworkSection";
+import CommunitySection from "@/components/shared/CommunitySection";
 import ImplementationJourney from "@/components/school-quality/ImplementationJourney";
 import PeopleBehindProcess from "@/components/school-quality/PeopleBehindProcess";
 import QualityInPractice from "@/components/school-quality/QualityInPractice";
 import SchoolHero from "@/components/school-quality/SchoolHero";
 import ThreePillars from "@/components/school-quality/ThreePillars";
-import QualityMattersSection from "@/components/sections/QualityMattersSection";
+import QualityMattersSection from "@/components/shared/QualityMattersSection";
 import WorkspaceSection from "@/components/school-quality/WorkspaceSection";
-import FinalCTA from "@/components/sections/FinalCTA";
-import KnowledgeSection from "@/components/sections/KnowledgeSection";
-import ClientsStrip from "@/components/sections/ClientsStrip";
+import FinalCTA from "@/components/shared/FinalCTA";
+import KnowledgeSection from "@/components/shared/KnowledgeSection";
+import ClientsStrip from "@/components/shared/ClientsStrip";
+import logoService from "@/services/logoService";
 
 export const metadata = {
   title: "School Quality Accreditation | Luneblaze",
@@ -46,12 +47,30 @@ export const metadata = {
 };
 
 const items = [
-  { title: "Parent & stakeholder confidence",  desc: "Demonstrate structured processes, transparent practices and a commitment to improvement through evidence of everyday school life." },
-  { title: "Consistency beyond individuals",   desc: "Document responsibilities and repeatable processes so institutional knowledge continues through changes in staff and leadership." },
-  { title: "Measurable school performance",    desc: "Use assessment findings to understand strengths, identify gaps and prioritise resources where support is needed." },
-  { title: "Prepared teams",                   desc: "Help teachers and coordinators understand expectations and maintain records throughout the year." },
-  { title: "Owned improvement plans",          desc: "Translate findings into actions with named owners, timelines and review meetings." },
-  { title: "Continuous institutional growth",  desc: "Build on each review to strengthen practices, improve teaching and sustain progress." },
+  {
+    title: "Parent & stakeholder confidence",
+    desc: "Demonstrate structured processes, transparent practices and a commitment to improvement through evidence of everyday school life.",
+  },
+  {
+    title: "Consistency beyond individuals",
+    desc: "Document responsibilities and repeatable processes so institutional knowledge continues through changes in staff and leadership.",
+  },
+  {
+    title: "Measurable school performance",
+    desc: "Use assessment findings to understand strengths, identify gaps and prioritise resources where support is needed.",
+  },
+  {
+    title: "Prepared teams",
+    desc: "Help teachers and coordinators understand expectations and maintain records throughout the year.",
+  },
+  {
+    title: "Owned improvement plans",
+    desc: "Translate findings into actions with named owners, timelines and review meetings.",
+  },
+  {
+    title: "Continuous institutional growth",
+    desc: "Build on each review to strengthen practices, improve teaching and sustain progress.",
+  },
 ];
 
 const frameworkItems = [
@@ -78,46 +97,89 @@ const frameworkItems = [
   },
 ];
 
-export default function SchoolQualityPage() {
+export default async function SchoolQualityPage() {
+  let schoolLogos = [];
+
+  try {
+    const response = await logoService.getAllLogos(1, 100);
+
+    if (
+      response?.status === "success" &&
+      Array.isArray(response?.data)
+    ) {
+      schoolLogos = response.data
+        .filter(
+          (logo) =>
+            String(logo.logo_type).toLowerCase() === "school"
+        )
+        .map((logo) => ({
+          name: logo.logo_name,
+          img: logoService.getLogoUrl(
+            logo.logo_uri,
+            response.host
+          ),
+        }));
+    }
+  } catch (error) {
+    console.error("Failed to fetch school logos:", error);
+  }
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#F4F8F8] text-[#152A2E]">
       <SchoolHero />
+
       <QualityMattersSection
-        eyebrow = "Why school quality matters"
-        heading = "Quality that lasts"
-        headingHighlight = "beyond an assessment."
-        items = {items}
-      />;
+        eyebrow="Why school quality matters"
+        heading="Quality that lasts"
+        headingHighlight="beyond an assessment."
+        items={items}
+      />
+
       <QualityInPractice />
+
       <FrameworkSection
-      eyebrow="Choose your school framework"
-      heading="A clear pathway"
-      headingHighlight="for your school."
-      items={frameworkItems}
-    />
-      <ImplementationJourney /> 
-      <AdvisorsBand /> 
+        eyebrow="Choose your school framework"
+        heading="A clear pathway"
+        headingHighlight="for your school."
+        items={frameworkItems}
+      />
+
+      <ImplementationJourney />
+
+      <AdvisorsBand />
+
       <WorkspaceSection />
+
       <ThreePillars />
+
       <PeopleBehindProcess />
+
       <FinalCTA
         eyebrow="Your next chapter in quality"
         heading="Build your school’s quality system."
         body="See how Luneblaze brings your people, processes and progress together. Start with a walkthrough for your institution."
         ctaLabel="Book a Demo ↗"
       />
+
       <KnowledgeSection />
+
       <AdvisorsScroller />
+
       <CommunitySection
-      eyebrow="School communities"
-      heading="Join Our School Communities"
-      groupLabel="SQAAF"
-      bg="#ffffff"
-    />
-      <ClientsStrip
-      title="Our school clients"
-      subtitle="Schools across India, Nigeria & the UAE"
-    />
+        eyebrow="School communities"
+        heading="Join Our School Communities"
+        groupLabel="SQAAF"
+        bg="#ffffff"
+      />
+
+      {schoolLogos.length > 0 && (
+        <ClientsStrip
+          title="Our school clients"
+          subtitle="Schools across India, Nigeria & the UAE"
+          logos={schoolLogos}
+        />
+      )}
+
       <FinalCTA
         eyebrow="Book a demo"
         heading="Ready to Simplify Your School Quality Journey?"

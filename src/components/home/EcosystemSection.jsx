@@ -106,12 +106,16 @@ export default function EcosystemSection() {
               boxShadow: "0 24px 50px -34px rgba(21,42,46,.45)",
             }}
           >
-            <iframe
-              src="/film/clip.html?s=Pillars&d=15.6&hold=3"
-              title="One ecosystem, three pillars"
-              loading="lazy"
-              className="absolute inset-0 block h-full w-full border-0"
-            />
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            >
+              <source src="/film/Luneblaze-Pillars-Loop.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
       </div>

@@ -3,6 +3,23 @@
 
 import { useEffect, useState } from "react";
 
+const IMAGE_BASE_URL = (process.env.NEXT_PUBLIC_IMAGE_URL || "").replace(/\/+$/, "");
+
+const getImageUrl = (path) => {
+  if (!path) return "/assets/blog-1.webp";
+
+  const imagePath = String(path).trim();
+
+  // Keep absolute URLs and data URLs unchanged.
+  if (/^(https?:)?\/\//i.test(imagePath) || imagePath.startsWith("data:")) {
+    return imagePath;
+  }
+
+  // API returns paths such as "blog/images/example.webp".
+  const cleanPath = imagePath.replace(/^\/+/, "");
+  return IMAGE_BASE_URL ? `${IMAGE_BASE_URL}/${cleanPath}` : `/${cleanPath}`;
+};
+
 export default function FeaturedBlogCard({
   image = "/assets/blog-1.webp",
   title = "Understanding the Seven SQAAF Domains",
@@ -14,6 +31,10 @@ export default function FeaturedBlogCard({
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
+
+  const imageUrl = getImageUrl(image);
+
+  
 
   // Scroll lock + Escape to close
   useEffect(() => {
@@ -139,8 +160,14 @@ export default function FeaturedBlogCard({
           }}
         >
           <img
-            src={image}
-            alt=""
+            src={imageUrl}
+            alt={title || "Featured blog"}
+            loading="lazy"
+            onError={(e) => {
+              // Avoid an infinite fallback loop if the local fallback is missing.
+              if (e.currentTarget.src.endsWith("/assets/blog-1.webp")) return;
+              e.currentTarget.src = "/assets/blog-1.webp";
+            }}
             style={{
               position: "absolute",
               inset: 0,

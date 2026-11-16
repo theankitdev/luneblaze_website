@@ -1,12 +1,9 @@
-import Link from "next/link";
 
-const avatars = [
-  "/assets/advisor-1.png",
-  "/assets/advisor-2.png",
-  "/assets/advisor-3.png",
-  "/assets/advisor-4.png",
-  "/assets/advisor-5.png",
-];
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { getAllTeachers } from "@/services/teacherService";
 
 const chips = [
   "Implementation guidance",
@@ -15,11 +12,50 @@ const chips = [
 ];
 
 export default function AdvisorsBand() {
+  const [advisors, setAdvisors] = useState([]);
+  const [host, setHost] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // Fetch advisors from CakePHP API
+  useEffect(() => {
+    const fetchAdvisors = async () => {
+      try {
+        const response = await getAllTeachers(1, 100);
+
+        if (response.status === "success") {
+          setAdvisors(response.data || []);
+          setHost(response.host || "");
+        }
+      } catch (error) {
+        console.error("Failed to fetch advisors:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdvisors();
+  }, []);
+
+  // Generate complete profile image URL
+  const getImageUrl = (image) => {
+    if (!image) return "/assets/advisor-placeholder.png";
+
+    if (image.startsWith("http")) {
+      return image;
+    }
+
+    return `${host.replace(/\/+$/, "")}/${image.replace(/^\/+/, "")}`;
+  };
+
+  // Display first 5 advisors
+  const displayedAdvisors = advisors.slice(0, 5);
+
   return (
     <section className="relative overflow-hidden border-b border-[#D6E3E5] bg-[#F4F8F8] px-5 py-16 sm:px-8 lg:py-20">
       <div className="relative mx-auto max-w-7xl">
         <div className="relative grid overflow-hidden border border-[#C9D9DC] bg-[linear-gradient(120deg,#F3FAFB,#E4F4F5)] md:grid-cols-2">
-          {/* orbit decoration */}
+
+          {/* Orbit decoration */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -right-[120px] -top-[120px] h-[340px] w-[340px]"
@@ -30,26 +66,41 @@ export default function AdvisorsBand() {
             />
           </div>
 
-          {/* LEFT — avatars + 50+ */}
+          {/* LEFT — dynamic avatars + 50+ */}
           <div className="relative flex flex-col justify-center gap-[18px] border-b border-[#C9D9DC] bg-white p-7 sm:p-10 md:border-b-0 md:border-r">
+
             <div className="flex items-center">
-              {avatars.map((src, i) => (
-                <div
-                  key={src}
-                  role="img"
-                  aria-label="Advisor"
-                  className="h-[clamp(54px,5.4vw,72px)] w-[clamp(54px,5.4vw,72px)] rounded-full border-[3px] border-white bg-[#DDEFF1] bg-cover bg-top shadow-[0_8px_18px_-10px_rgba(15,60,66,.5)]"
-                  style={{
-                    backgroundImage: `url('${src}')`,
-                    marginLeft: i === 0 ? 0 : "-16px",
-                  }}
-                />
-              ))}
+              {loading
+                ? Array.from({ length: 5 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-[clamp(54px,5.4vw,72px)] w-[clamp(54px,5.4vw,72px)] animate-pulse rounded-full border-[3px] border-white bg-[#DDEFF1]"
+                      style={{
+                        marginLeft: i === 0 ? 0 : "-16px",
+                      }}
+                    />
+                  ))
+                : displayedAdvisors.map((advisor, i) => (
+                    <div
+                      key={advisor.teacher_id}
+                      role="img"
+                      aria-label={advisor.teacher_name || "Advisor"}
+                      className="h-[clamp(54px,5.4vw,72px)] w-[clamp(54px,5.4vw,72px)] rounded-full border-[3px] border-white bg-[#DDEFF1] bg-cover bg-top shadow-[0_8px_18px_-10px_rgba(15,60,66,.5)]"
+                      style={{
+                        backgroundImage: `url("${getImageUrl(
+                          advisor.teacher_profile_picture
+                        )}")`,
+                        marginLeft: i === 0 ? 0 : "-16px",
+                      }}
+                    />
+                  ))}
             </div>
+
             <div className="flex items-baseline gap-3">
               <span className="text-[clamp(38px,4vw,52px)] font-extrabold leading-none tracking-[-.04em] text-[#17AEB9]">
                 50+
               </span>
+
               <span className="text-[14.5px] leading-[1.45] text-[#4C6165]">
                 <b className="text-[#152A2E]">
                   Education leaders &amp; quality experts
@@ -95,7 +146,9 @@ export default function AdvisorsBand() {
             <Link
               href="/advisors"
               className="mt-5 inline-flex items-center gap-2 self-start rounded-[4px] bg-[#17AEB9] px-[22px] py-[13px] text-[15px] font-bold text-white transition-colors hover:bg-[#0E8B95]"
-              style={{ boxShadow: "0 12px 24px -12px rgba(23,174,185,.85)" }}
+              style={{
+                boxShadow: "0 12px 24px -12px rgba(23,174,185,.85)",
+              }}
             >
               Meet our advisors ↗
             </Link>

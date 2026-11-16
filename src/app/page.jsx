@@ -1,3 +1,4 @@
+
 import HeroSection from "@/components/home/HeroSection";
 import TrustedInstitutions from "@/components/home/TrustedInstitutions";
 import PathwaysSection from "@/components/home/PathwaysSection";
@@ -8,10 +9,9 @@ import ReadinessSection from "@/components/home/ReadinessSection";
 import GroupsSection from "@/components/home/GroupsSection";
 import FrameworksSection from "@/components/home/FrameworksSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
-import KnowledgeSection from "@/components/sections/KnowledgeSection";
-import FinalCTA from "@/components/sections/FinalCTA";
-import QualitySystemFilm from "@/components/home/QualitySystemFilm";
-
+import KnowledgeSection from "@/components/shared/KnowledgeSection";
+import FinalCTA from "@/components/shared/FinalCTA";
+import logoService from "@/services/logoService";
 
 export const metadata = {
   title: "Luneblaze | Inducing Quality in Education",
@@ -61,13 +61,41 @@ export const metadata = {
 };
 
 
-export default function HomePage() {
+export default async function HomePage() {
+  let schoolLogos = [];
+
+  try {
+    const response = await logoService.getAllLogos(1, 100);
+
+    if (
+      response?.status === "success" &&
+      Array.isArray(response?.data)
+    ) {
+      schoolLogos = response.data
+        .filter((logo) =>
+          ["school", "college"].includes(
+            String(logo.logo_type).toLowerCase()
+          )
+        )
+        .map((logo) => ({
+          name: logo.logo_name,
+          img: logoService.getLogoUrl(
+            logo.logo_uri,
+            response.host
+          ),
+        }));
+    }
+  } catch (error) {
+    console.error("Failed to fetch institution logos:", error);
+  }
+
   return (
     <>
       <HeroSection />
-      <TrustedInstitutions />
+
+      <TrustedInstitutions logos={schoolLogos} />
+
       <PathwaysSection />
-      <QualitySystemFilm />
       <EcosystemSection />
       <WorkspaceSection />
       <ImprovementCycle />
@@ -76,13 +104,15 @@ export default function HomePage() {
       <FrameworksSection />
       <TestimonialsSection />
       <KnowledgeSection />
-      <FinalCTA 
-        eyebrow = "Your next chapter in quality"
-        heading = "Let’s make quality a culture."
-        body = "See how Luneblaze brings your people, processes and progress together. Start with a walkthrough for your institution."
-        ctaLabel = "Book a Demo ↗"
-        ctaHref = "/book-a-demo"
+
+      <FinalCTA
+        eyebrow="Your next chapter in quality"
+        heading="Let’s make quality a culture."
+        body="See how Luneblaze brings your people, processes and progress together. Start with a walkthrough for your institution."
+        ctaLabel="Book a Demo ↗"
+        ctaHref="/book-a-demo"
       />
     </>
   );
 }
+

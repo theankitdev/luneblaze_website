@@ -4,29 +4,14 @@ import FrameworkStats from "@/components/framework/FrameworkStats";
 import FrameworkSplit from "@/components/framework/FrameworkSplit";
 import InsidePlatform from "@/components/framework/InsidePlatform";
 import FrameworkAlso from "@/components/framework/FrameworkAlso";
-import FrameworkSection from "@/components/sections/ChooseFrameworkSection";
-import CommunitySection from "@/components/sections/CommunitySection";
-import KnowledgeSection from "@/components/sections/KnowledgeSection";
-import ClientsStrip from "@/components/sections/ClientsStrip";
-import AdvisorsScroller from "@/components/school-quality/AdvisorsScrollar";
+import FrameworkSection from "@/components/shared/ChooseFrameworkSection";
+import CommunitySection from "@/components/shared/CommunitySection";
+import KnowledgeSection from "@/components/shared/KnowledgeSection";
+import AdvisorsScroller from "@/components/shared/AdvisorsScrollar";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
-import FinalCTA from "@/components/sections/FinalCTA";
+import FinalCTA from "@/components/shared/FinalCTA";
 import { buildWheelSvg } from "@/lib/wheelsvg";
 
-const COLLEGE_CLIENTS = [
-  { name: "Father Agnel Group of Schools", img: "/assets/client-father-agnel.png" },
-  { name: "Shalom Group of Schools", img: "/assets/client-shalom.png" },
-  { name: "Gayatri Group of Schools", img: "/assets/client-gayatri.png" },
-  { name: "Holy Child Group of Schools", img: "/assets/client-holy-child.png" },
-  { name: "GD Goenka School", img: "/assets/client-gd-goenka.png" },
-  { name: "St. Michael's School", img: "/assets/client-st-michaels.png" },
-  { name: "Chinmaya Vidyalaya", img: "/assets/client-chinmaya.png" },
-  { name: "Evergreen Public School", img: "/assets/client-evergreen.png" },
-  { name: "Livingstone Foundation International", img: "/assets/client-livingstone.png" },
-  { name: "SMS Academy of Central Education", img: "/assets/client-sms-academy.png" },
-  { name: "Indian Language School, Nigeria", img: "/assets/client-indian-language.png" },
-  { name: "Al Ain Juniors School, UAE", img: "/assets/client-al-ain.png" },
-];
 
 const nbaWheel = buildWheelSvg("NBA", [
   "Vision, Mission & PEOs",

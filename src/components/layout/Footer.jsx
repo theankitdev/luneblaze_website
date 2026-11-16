@@ -209,19 +209,19 @@ export default function Footer() {
                 { src: "/assets/partner-dpiit-dark.png", alt: "DPIIT Startup India recognised", max: 118 },
                 { src: "/assets/partner-sdg4-dark.png", alt: "SDG 4 — Quality Education", max: 152 },
               ].map((p) => (
-                <span
+                <div
                   key={p.src}
-                  className="flex items-center justify-center rounded-[13px] border border-[#21535B] bg-white/[0.06] px-[14px] py-[11px]"
+                  className="flex h-[64px] w-full items-center justify-center rounded-[13px] bg-white px-3 py-2 shadow-sm"
                 >
                   <Image
                     src={p.src}
                     alt={p.alt}
                     width={p.max}
-                    height={40}
-                    className="block h-auto w-full"
+                    height={60}
+                    className="block h-auto max-h-[60px] w-auto object-contain"
                     style={{ maxWidth: p.max }}
                   />
-                </span>
+                </div>
               ))}
             </div>
           </div>

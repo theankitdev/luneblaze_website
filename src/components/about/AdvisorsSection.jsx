@@ -1,15 +1,9 @@
-// src/components/about/AdvisorsSection.jsx
+
 "use client";
 
-const ADVISOR_IMAGES = [
-  { src: "/assets/advisor-1.png", alt: "Ms. Kalyani Dixit" },
-  { src: "/assets/advisor-2.png", alt: "Ms. Mini Johny" },
-  { src: "/assets/advisor-3.png", alt: "Dr. Kshma Swarnkar" },
-  { src: "/assets/advisor-8.png", alt: "Dr. Rakhee Chaudhary" },
-  { src: "/assets/advisor-12.png", alt: "Dr. Manjari Tejpal" },
-  { src: "/assets/advisor-6.png", alt: "Mr. Naresh Sharma" },
-  { src: "/assets/advisor-16.png", alt: "Dr. Bani Godara" },
-];
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { getAllTeachers } from "@/services/teacherService";
 
 const EXPERTISE = [
   "Accreditation & quality assurance",
@@ -19,12 +13,64 @@ const EXPERTISE = [
 ];
 
 const STATS = [
-  { value: "50+", label: "Education leaders & quality experts", color: "#0E8B95" },
-  { value: "5", label: "Frameworks supported", color: "#152A2E" },
-  { value: "India", label: "and institutions abroad", color: "#152A2E" },
+  {
+    value: "50+",
+    label: "Education leaders & quality experts",
+    color: "#0E8B95",
+  },
+  {
+    value: "5",
+    label: "Frameworks supported",
+    color: "#152A2E",
+  },
+  {
+    value: "India",
+    label: "and institutions abroad",
+    color: "#152A2E",
+  },
 ];
 
 export default function AdvisorsSection() {
+  const [advisors, setAdvisors] = useState([]);
+  const [host, setHost] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAdvisors = async () => {
+      try {
+        const response = await getAllTeachers(1, 100);
+
+        if (response.status === "success") {
+          setAdvisors(response.data || []);
+          setHost(response.host || "");
+        }
+      } catch (error) {
+        console.error("Failed to fetch advisors:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdvisors();
+  }, []);
+
+  // Generate complete image URL
+  const getImageUrl = (image) => {
+    if (!image) return "/assets/advisor-placeholder.png";
+
+    if (image.startsWith("http")) {
+      return image;
+    }
+
+    return `${host.replace(/\/+$/, "")}/${image.replace(/^\/+/, "")}`;
+  };
+
+  // Show only first 7 advisors
+  const displayedAdvisors = advisors.slice(0, 7);
+
+  // Remaining advisors count
+  const remainingAdvisors = Math.max(advisors.length - 7, 0);
+
   return (
     <section
       id="advisors"
@@ -35,6 +81,7 @@ export default function AdvisorsSection() {
       }}
     >
       <div style={{ position: "relative", display: "flex", flexWrap: "wrap" }}>
+
         {/* Left: photos + stats */}
         <div
           style={{
@@ -63,6 +110,7 @@ export default function AdvisorsSection() {
               backgroundSize: "28px 28px",
             }}
           />
+
           <div
             aria-hidden="true"
             style={{
@@ -75,10 +123,25 @@ export default function AdvisorsSection() {
               animation: "lbSpin 130s linear infinite",
             }}
           >
-            <div style={{ position: "absolute", inset: 0, border: "1px solid rgba(23,174,185,.16)", borderRadius: "50%" }} />
-            <div style={{ position: "absolute", inset: "16%", border: "1px dashed rgba(23,174,185,.16)", borderRadius: "50%" }} />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                border: "1px solid rgba(23,174,185,.16)",
+                borderRadius: "50%",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                inset: "16%",
+                border: "1px dashed rgba(23,174,185,.16)",
+                borderRadius: "50%",
+              }}
+            />
           </div>
 
+          {/* Dynamic advisor images */}
           <div
             data-reveal=""
             style={{
@@ -89,45 +152,67 @@ export default function AdvisorsSection() {
               maxWidth: 440,
             }}
           >
-            {ADVISOR_IMAGES.map((a) => (
-              <img
-                key={a.src}
-                src={a.src}
-                alt={a.alt}
+            {loading
+              ? Array.from({ length: 7 }).map((_, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      width: "100%",
+                      aspectRatio: "1 / 1",
+                      borderRadius: "50%",
+                      background: "#D5E8EA",
+                      animation: "lbPulse 2.4s ease-in-out infinite",
+                    }}
+                  />
+                ))
+              : displayedAdvisors.map((advisor) => (
+                  <img
+                    key={advisor.teacher_id}
+                    src={getImageUrl(advisor.teacher_profile_picture)}
+                    alt={advisor.teacher_name || "Advisor"}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src =
+                        "/assets/advisor-placeholder.png";
+                    }}
+                    style={{
+                      width: "100%",
+                      aspectRatio: "1 / 1",
+                      objectFit: "cover",
+                      borderRadius: "50%",
+                      border: "3px solid #fff",
+                      boxShadow: "0 14px 28px -16px rgba(15,60,66,.55)",
+                    }}
+                  />
+                ))}
+
+            {!loading && remainingAdvisors > 0 && (
+              <Link
+                href="/advisors"
+                aria-label={`See ${remainingAdvisors} more advisors`}
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   width: "100%",
                   aspectRatio: "1 / 1",
-                  objectFit: "cover",
                   borderRadius: "50%",
+                  background: "#0E7A83",
                   border: "3px solid #fff",
+                  color: "#fff",
+                  fontSize: "clamp(14px,1.4vw,18px)",
+                  fontWeight: 800,
+                  letterSpacing: "-.02em",
+                  textDecoration: "none",
                   boxShadow: "0 14px 28px -16px rgba(15,60,66,.55)",
                 }}
-              />
-            ))}
-            <a
-              href="/advisors.html"
-              aria-label="See all advisors"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                aspectRatio: "1 / 1",
-                borderRadius: "50%",
-                background: "#0E7A83",
-                border: "3px solid #fff",
-                color: "#fff",
-                fontSize: "clamp(14px,1.4vw,18px)",
-                fontWeight: 800,
-                letterSpacing: "-.02em",
-                textDecoration: "none",
-                boxShadow: "0 14px 28px -16px rgba(15,60,66,.55)",
-              }}
-            >
-              +40
-            </a>
+              >
+                +{remainingAdvisors}
+              </Link>
+            )}
           </div>
 
+          {/* Stats */}
           <div
             data-reveal=""
             style={{
@@ -146,13 +231,35 @@ export default function AdvisorsSection() {
                 style={{
                   flex: "1 1 120px",
                   padding: "16px 18px",
-                  borderRight: i < STATS.length - 1 ? "1px solid #DBEDEF" : "none",
+                  borderRight:
+                    i < STATS.length - 1
+                      ? "1px solid #DBEDEF"
+                      : "none",
                 }}
               >
-                <span style={{ display: "block", fontSize: "clamp(28px,3vw,40px)", lineHeight: 1, fontWeight: 800, letterSpacing: "-.04em", color: s.color }}>
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: "clamp(28px,3vw,40px)",
+                    lineHeight: 1,
+                    fontWeight: 800,
+                    letterSpacing: "-.04em",
+                    color: s.color,
+                  }}
+                >
                   {s.value}
                 </span>
-                <span style={{ display: "block", marginTop: 6, fontSize: 12, lineHeight: 1.45, fontWeight: 700, color: "#4C6165" }}>
+
+                <span
+                  style={{
+                    display: "block",
+                    marginTop: 6,
+                    fontSize: 12,
+                    lineHeight: 1.45,
+                    fontWeight: 700,
+                    color: "#4C6165",
+                  }}
+                >
                   {s.label}
                 </span>
               </div>
@@ -192,9 +299,19 @@ export default function AdvisorsSection() {
               whiteSpace: "nowrap",
             }}
           >
-            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: "#17AEB9", animation: "lbPulse 2.4s ease-in-out infinite" }} />
+            <span
+              aria-hidden="true"
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#17AEB9",
+                animation: "lbPulse 2.4s ease-in-out infinite",
+              }}
+            />
             Our advisors
           </span>
+
           <h2
             style={{
               margin: 0,
@@ -206,13 +323,26 @@ export default function AdvisorsSection() {
             }}
           >
             Guided by experience.{" "}
-            <span style={{ display: "block", color: "#17AEB9" }}>Strengthened by expertise.</span>
+            <span style={{ display: "block", color: "#17AEB9" }}>
+              Strengthened by expertise.
+            </span>
           </h2>
-          <p style={{ margin: 0, maxWidth: "56ch", fontSize: "clamp(14px,1.1vw,16.5px)", lineHeight: 1.68, color: "#5F7175" }}>
-            Behind the platform is a network of principals, CBSE resource persons, master
-            trainers and accreditation specialists. They work alongside your team on
-            implementation, training and quality reviews.
+
+          <p
+            style={{
+              margin: 0,
+              maxWidth: "56ch",
+              fontSize: "clamp(14px,1.1vw,16.5px)",
+              lineHeight: 1.68,
+              color: "#5F7175",
+            }}
+          >
+            Behind the platform is a network of principals, CBSE resource
+            persons, master trainers and accreditation specialists. They
+            work alongside your team on implementation, training and
+            quality reviews.
           </p>
+
           <ul
             style={{
               listStyle: "none",
@@ -226,15 +356,37 @@ export default function AdvisorsSection() {
             }}
           >
             {EXPERTISE.map((x) => (
-              <li key={x} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, lineHeight: 1.5, fontWeight: 700, color: "#152A2E" }}>
-                <span aria-hidden="true" style={{ color: "#17AEB9" }}>✓</span>
+              <li
+                key={x}
+                style={{
+                  display: "flex",
+                  gap: 10,
+                  alignItems: "flex-start",
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                  fontWeight: 700,
+                  color: "#152A2E",
+                }}
+              >
+                <span aria-hidden="true" style={{ color: "#17AEB9" }}>
+                  ✓
+                </span>
                 {x}
               </li>
             ))}
           </ul>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 10 }}>
-            <a
-              href="/advisors.html"
+
+          {/* CTAs */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 12,
+              marginTop: 10,
+            }}
+          >
+            <Link
+              href="/advisors"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -250,9 +402,10 @@ export default function AdvisorsSection() {
               }}
             >
               Meet our advisors <span>↗</span>
-            </a>
-            <a
-              href="/advisor-apply.html"
+            </Link>
+
+            <Link
+              href="/advisor-apply"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -268,7 +421,7 @@ export default function AdvisorsSection() {
               }}
             >
               Join the advisory network
-            </a>
+            </Link>
           </div>
         </div>
       </div>

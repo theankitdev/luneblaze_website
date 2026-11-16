@@ -1,7 +1,35 @@
 
 import Link from "next/link";
 
-export default function BlogCard({ item }) {
+const DEFAULT_IMAGE_HOST =
+  process.env.NEXT_PUBLIC_IMAGE_URL || "https://api.luneblaze.com/";
+
+const getImageUrl = (path, host) => {
+  if (!path || typeof path !== "string") {
+    return "/images/blog-placeholder.jpg";
+  }
+
+  const cleanPath = path.trim();
+
+  // Already a complete URL
+  if (/^https?:\/\//i.test(cleanPath)) {
+    return cleanPath;
+  }
+
+  // Use API host, with environment fallback
+  const imageHost = (host || DEFAULT_IMAGE_HOST).replace(/\/+$/, "");
+
+  const imagePath = cleanPath.replace(/^\/+/, "");
+
+  return `${imageHost}/${imagePath}`;
+};
+
+export default function BlogCard({ item, host }) {
+  const imageUrl = getImageUrl(
+    item.coverImage || item.img,
+    host
+  );
+
   return (
     <Link
       href={item.href || `/blog/${item.slug}`}
@@ -41,13 +69,18 @@ export default function BlogCard({ item }) {
         }}
       >
         <img
-          src={item.img}
-          alt={item.title}
+          src={imageUrl}
+          alt={item.title || "Blog image"}
           loading="lazy"
+          onError={(e) => {
+            console.error("Blog image failed:", e.currentTarget.src);
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "/images/blog-placeholder.jpg";
+          }}
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "contain",
+            objectFit: "cover",
             display: "block",
           }}
         />

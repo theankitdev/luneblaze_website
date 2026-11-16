@@ -93,15 +93,24 @@ export default function HeroSection() {
             AI-powered quality systems for education
           </span>
 
-          <h1 className="mt-5 text-balance font-extrabold leading-[1.04] tracking-[-.035em] text-[#152A2E] [font-size:clamp(38px,5.2vw,68px)]">
-            Drive institutional quality.{" "}
-            <span className="text-[#17AEB9]">Inspire excellence.</span>
+          <h1 className="mt-5 font-extrabold leading-[1.04] tracking-[-.035em] text-[#152A2E] [font-size:clamp(38px,5.2vw,68px)]">
+            <span className="">
+              Drive institutional{" "}
+              <span className="text-[#17AEB9]">quality.</span>
+            </span>
+            <br />
+            <span className="whitespace-nowrap">
+              Inspire <span className="text-[#17AEB9]">excellence.</span>
+            </span>
           </h1>
 
           <p className="mt-[22px] max-w-[560px] text-pretty text-[clamp(16px,1.35vw,18px)] leading-[1.7] text-[#4C6165]">
-            Implement, measure and enhance institutional quality. Bring people,
-            processes, evidence and improvement together with Luneblaze’s
-            AI-powered quality ecosystem.
+            Build your institution’s Quality Muscle with an AI-powered,
+            end-to-end Education Quality Ecosystem. Bring together an
+            intelligent platform, empowered quality teams, hands-on
+            implementation and continuous performance monitoring to build strong
+            Quality Systems, drive Continuous Excellence and strengthen
+            Governance.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -109,7 +118,7 @@ export default function HeroSection() {
               href="/book-a-demo"
               className="inline-flex items-center gap-[10px] whitespace-nowrap rounded-[10px] bg-[#17AEB9] px-[26px] py-4 text-[16px] font-bold text-white shadow-[0_10px_24px_-14px_rgba(23,174,185,.9)] transition-colors hover:bg-[#0E8B95]"
             >
-              Book a Demo <span>↗</span>
+              Explore Our Quality Ecosystem <span>↗</span>
             </Link>
             <Link
               href="#ecosystem"
@@ -230,8 +239,7 @@ export default function HeroSection() {
                       }`}
                       style={{
                         height: b.h,
-                        animation:
-                          "lfRise .9s cubic-bezier(.2,.7,.2,1) both",
+                        animation: "lfRise .9s cubic-bezier(.2,.7,.2,1) both",
                         animationDelay: `${i * 60}ms`,
                       }}
                     />

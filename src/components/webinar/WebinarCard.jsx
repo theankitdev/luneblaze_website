@@ -90,7 +90,7 @@ export default function WebinarCard({ item }) {
           {item.title}
         </span>
 
-        <span className="block flex-1 text-[12.5px] leading-[1.58] text-[#5F7175]">
+        <span className="block flex-1 text-[12.5px] leading-[1.58] text-[#5F7175] line-clamp-3!">
           {item.desc}
         </span>
 

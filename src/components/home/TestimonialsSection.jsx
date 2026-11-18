@@ -1,76 +1,135 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-
-const testimonials = [
-  {
-    quote: "Luneblaze’s guidance during our SQAAF implementation was invaluable. Their structured documentation support, responsive team, and user-friendly portal made the entire process smooth and efficient.",
-    name: "Mohammad Gaffar",
-    role: "Principal · Al Ain Juniors School, UAE",
-    img: "/assets/testimonial-1.png",
-  },
-  {
-    quote: "Our SQAAF implementation gained clarity and momentum after partnering with Luneblaze. The structured portal, intuitive dashboard, and timely support helped our team stay aligned with CBSE timelines and manage documentation efficiently.",
-    name: "Kusum K P",
-    role: "Principal · SMS Academy of Central Education, Karnataka",
-    img: "/assets/testimonial-2.png",
-  },
-  {
-    quote: "Luneblaze’s support during our SQAAF implementation was invaluable. Their structured documentation system and intuitive platform made compliance manageable and efficient for our team.",
-    name: "Fr. Roy D’Sa",
-    role: "Principal · Fr. Agnel Group of Schools",
-    img: "/assets/testimonial-3.png",
-  },
-  {
-    quote: "Luneblaze has been an integral part of our SQAAF journey. Their tech-based platform streamlined automation and documentation, providing well-structured, tailored solutions that made accreditation implementation seamless.",
-    name: "Dr. Andrew Aohato",
-    role: "Principal · Livingstone Foundation International School, Nagaland",
-    img: "/assets/testimonial-4.png",
-  },
-  {
-    quote: "Luneblaze has brought structure and clarity to our quality assurance journey. The user-friendly portal, streamlined documentation, progress tracking, and timely expert support have helped us manage SQAAF requirements more effectively.",
-    name: "Pradumna Chaturvedi",
-    role: "Managing Director · Gayatri Group of Schools",
-    img: "/assets/testimonial-5.png",
-  },
-  {
-    quote: "Luneblaze’s technology-driven systems have streamlined our accreditation and assessment processes, significantly enhancing quality and efficiency in our school.",
-    name: "Vandana Bhatia",
-    role: "Principal · Holy Child Group of Schools",
-    img: "/assets/testimonial-6.png",
-  },
-];
+import testimonialService from "@/services/testimonialService";
 
 export default function TestimonialsSection() {
+  // Keep the complete API result in memory. The UI shows six at a time,
+  // but navigation moves through the full list (1, 2, ... 6, 7, 8 ...).
+  const [testimonials, setTestimonials] = useState([]);
   const [active, setActive] = useState(0);
+  const [loading, setLoading] = useState(true);
   const timer = useRef(null);
+  const testimonialsRef = useRef([]);
+  const activeRef = useRef(0);
 
-  const startAutoplay = () => {
-    clearInterval(timer.current);
-    timer.current = setInterval(() => {
-      setActive((i) => (i + 1) % testimonials.length);
-    }, 7000);
+  const mapTestimonials = (rows, host) =>
+    rows
+      .map((item, index) => ({
+        id: item.id ?? `${item.name || "testimonial"}-${index}`,
+        quote: item.text_feedback || "",
+        name: item.name || "Institution",
+        role: [item.designation || item.role, item.school_name]
+          .filter(Boolean)
+          .join(" · "),
+        img: testimonialService.getFeedImageUrl(item.image, host) || "",
+        logo: testimonialService.getFeedImageUrl(item.logo, host),
+      }))
+      .filter((item) => item.quote || item.name);
+
+  const setActiveIndex = (index) => {
+    const safeIndex = Math.max(0, Math.min(index, testimonialsRef.current.length - 1));
+    activeRef.current = safeIndex;
+    setActive(safeIndex);
   };
 
   useEffect(() => {
-    startAutoplay();
-    return () => clearInterval(timer.current);
+    let isMounted = true;
+
+    const fetchAllTestimonials = async () => {
+      setLoading(true);
+      const allRows = [];
+      let pageNumber = 1;
+      const pageSize = 6;
+      let imageHost = "";
+
+      try {
+        // API uses offset as a page number: 1, 2, 3, etc.
+        // Fetch every page so moving past item 6 selects item 7, not item 1.
+        while (true) {
+          let response;
+          try {
+            response = await testimonialService.getFeed(pageNumber, pageSize);
+          } catch (error) {
+            // CakePHP returns 404 when there are no more records.
+            if (error?.response?.status === 404 || error?.status === 404) break;
+            throw error;
+          }
+
+          const rows = Array.isArray(response?.data) ? response.data : [];
+          if (response?.host) imageHost = response.host;
+          if (rows.length === 0) break;
+
+          allRows.push(...rows);
+          if (rows.length < pageSize) break;
+          pageNumber += 1;
+        }
+
+        if (!isMounted) return;
+
+        const mapped = mapTestimonials(allRows, imageHost);
+        if (mapped.length > 0) {
+          testimonialsRef.current = mapped;
+          setTestimonials(mapped);
+          setActiveIndex(0);
+        } else {
+          testimonialsRef.current = [];
+          setTestimonials([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch testimonials:", error);
+        // Do not show hard-coded data when the API fails.
+        testimonialsRef.current = [];
+        setTestimonials([]);
+        setActive(0);
+        activeRef.current = 0;
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchAllTestimonials();
+    return () => {
+      isMounted = false;
+      clearInterval(timer.current);
+    };
   }, []);
 
   const prev = () => {
     clearInterval(timer.current);
-    setActive((i) => (i + testimonials.length - 1) % testimonials.length);
-  };
-  const next = () => {
-    clearInterval(timer.current);
-    setActive((i) => (i + 1) % testimonials.length);
-  };
-  const pick = (i) => {
-    clearInterval(timer.current);
-    setActive(i);
+    if (activeRef.current > 0) setActiveIndex(activeRef.current - 1);
   };
 
-  const current = testimonials[active];
+  const next = () => {
+    clearInterval(timer.current);
+    if (activeRef.current < testimonialsRef.current.length - 1) {
+      setActiveIndex(activeRef.current + 1);
+    }
+  };
+
+  const pick = (index) => {
+    clearInterval(timer.current);
+    setActiveIndex(index);
+  };
+
+  useEffect(() => {
+    clearInterval(timer.current);
+    if (testimonials.length <= 1) return undefined;
+
+    timer.current = setInterval(() => {
+      if (activeRef.current < testimonialsRef.current.length - 1) {
+        setActiveIndex(activeRef.current + 1);
+      } else {
+        clearInterval(timer.current);
+      }
+    }, 7000);
+
+    return () => clearInterval(timer.current);
+  }, [testimonials, active]);
+
+  const current = testimonials[active] || null;
+  const pageStart = Math.floor(active / 6) * 6;
+  const visibleTestimonials = testimonials.slice(pageStart, pageStart + 6);
   const count = `${String(active + 1).padStart(2, "0")} / ${String(testimonials.length).padStart(2, "0")}`;
 
   return (
@@ -123,6 +182,8 @@ export default function TestimonialsSection() {
           className="mt-[clamp(22px,3vw,34px)] grid items-stretch gap-[clamp(16px,2vw,24px)]"
           style={{ gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,420px),1fr))" }}
         >
+          {current ? (
+            <>
           {/* main quote card */}
           <blockquote
             className="relative flex min-h-full flex-col justify-between gap-7 overflow-hidden p-[clamp(30px,4vw,56px)] text-white"
@@ -186,14 +247,16 @@ export default function TestimonialsSection() {
                 <button
                   onClick={prev}
                   aria-label="Previous"
-                  className="grid h-10 w-10 place-items-center rounded-full border border-white/60 bg-transparent text-[16px] text-white transition-colors"
+                  disabled={loading || active === 0}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-white/60 bg-transparent text-[16px] text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   ←
                 </button>
                 <button
                   onClick={next}
                   aria-label="Next"
-                  className="grid h-10 w-10 place-items-center rounded-full border-0 bg-white text-[16px] text-[#0E8B95] transition-colors hover:bg-[#EDF7F8]"
+                  disabled={loading || active >= testimonials.length - 1}
+                  className="grid h-10 w-10 place-items-center rounded-full border-0 bg-white text-[16px] text-[#0E8B95] transition-colors hover:bg-[#EDF7F8] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   →
                 </button>
@@ -206,12 +269,13 @@ export default function TestimonialsSection() {
             className="grid content-stretch gap-3"
             style={{ gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,230px),1fr))" }}
           >
-            {testimonials.map((t, i) => {
-              const selected = i === active;
+            {visibleTestimonials.map((t, i) => {
+              const actualIndex = pageStart + i;
+              const selected = actualIndex === active;
               return (
                 <button
-                  key={t.name}
-                  onClick={() => pick(i)}
+                  key={t.id || t.name}
+                  onClick={() => pick(actualIndex)}
                   className="flex flex-col gap-[10px] p-4 text-left transition-colors"
                   style={{
                     background: selected ? "#EDF7F8" : "#fff",
@@ -249,6 +313,12 @@ export default function TestimonialsSection() {
               );
             })}
           </div>
+            </>
+          ) : (
+            <div className="col-span-full py-12 text-center text-[#6A7C80]">
+              {loading ? "Loading testimonials..." : "No testimonials available."}
+            </div>
+          )}
         </div>
       </div>
     </section>

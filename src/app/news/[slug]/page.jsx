@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
+import newsService from "@/services/newsService";
 
 /* ───────────── Share row ───────────── */
 function ShareRow({ title, size = "32" }) {
@@ -335,6 +336,138 @@ const PUBLIC_NEWS_SLUGS = [
   "quarterly-quality-digest",
 ];
 
+/* ───────────── API helpers ───────────── */
+const slugify = (value = "") =>
+  String(value)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const extractNewsRows = (response) => {
+  if (Array.isArray(response)) return response;
+
+  const candidates = [
+    response?.data?.news,
+    response?.data?.data,
+    response?.result?.news,
+    response?.news,
+    response?.result,
+    response?.data,
+  ];
+
+  return candidates.find(Array.isArray) || [];
+};
+
+const extractNewsRecord = (response) => {
+  if (!response) return null;
+  if (Array.isArray(response)) return response[0] || null;
+
+  const candidates = [
+    response?.data?.news,
+    response?.data?.data,
+    response?.result?.news,
+    response?.news,
+    response?.result,
+    response?.data,
+  ];
+
+  return candidates.find((value) => value && !Array.isArray(value) && typeof value === "object")
+    || null;
+};
+
+const getNewsId = (item) =>
+  item?.news_id ?? item?.id ?? item?.newsId ?? item?.ID ?? null;
+
+const getNewsSlug = (item) =>
+  item?.slug || item?.url_slug || item?.news_slug || slugify(item?.title || "");
+
+const getArticleBody = (item) => {
+  const content = item?.body || item?.content || item?.details || item?.description || "";
+
+  if (Array.isArray(content)) {
+    return content.map((block) => ({
+      ...block,
+      t: block.t || block.type || "p",
+      html: block.html || block.content || block.text || "",
+    }));
+  }
+
+  if (typeof content === "string" && content.trim()) {
+    try {
+      const parsed = JSON.parse(content);
+      if (Array.isArray(parsed)) {
+        return parsed.map((block) => ({
+          ...block,
+          t: block.t || block.type || "p",
+          html: block.html || block.content || block.text || "",
+        }));
+      }
+    } catch {
+      // API content is ordinary HTML, not JSON.
+    }
+
+    return [{ t: "html", html: content }];
+  }
+
+  return [];
+};
+
+const normalizeNewsRecord = (item, fallback = {}) => {
+  const section = item?.section || item?.category || fallback.category || "News";
+  const imagePath =
+    item?.source_img ||
+    item?.sourceImage ||
+    item?.image ||
+    item?.image_url ||
+    item?.image_path ||
+    fallback.image;
+
+  const date = item?.date || item?.published_at || item?.created_at || fallback.date || "Recently published";
+  const details = item?.details || item?.body || item?.content;
+
+  return {
+    ...fallback,
+    id: getNewsId(item) || fallback.id,
+    slug: getNewsSlug(item) || fallback.slug,
+    title: item?.title || fallback.title || "Untitled news",
+    dek: item?.subtitle || item?.short_description || item?.excerpt || fallback.dek || "",
+    tag: section,
+    tagColor: fallback.tagColor || "#0E8B95",
+    tagBg: fallback.tagBg || "#E4F5F6",
+    tagBorder: fallback.tagBorder || "#B7E2E5",
+    category: section,
+    date,
+    published: date,
+    readTime: item?.read_time || fallback.readTime || "3 min read",
+    image: imagePath
+      ? (String(imagePath).startsWith("/assets/")
+          ? imagePath
+          : newsService.getNewsImageUrl(imagePath))
+      : fallback.image || "/assets/group-schools.png",
+    imageCaption: item?.image_caption || fallback.imageCaption || "",
+    caption2: item?.caption2 || fallback.caption2 || "",
+    location: item?.location || fallback.location || "",
+    body: getArticleBody(item).length
+      ? getArticleBody(item)
+      : fallback.body || (typeof details === "string" && details ? [{ t: "html", html: details }] : []),
+    body2: Array.isArray(item?.body2) ? item.body2 : fallback.body2 || [],
+  };
+};
+
+const normalizeRelatedRecord = (item) => {
+  const normalized = normalizeNewsRecord(item);
+  return {
+    slug: getNewsSlug(item),
+    title: normalized.title,
+    image: normalized.image,
+    tag: normalized.tag,
+    tagBg: normalized.tagBg,
+    tagColor: normalized.tagColor,
+    published: normalized.published,
+  };
+};
+
 /* ───────────── Icons ───────────── */
 function ArrowLeft() {
   return (
@@ -359,7 +492,13 @@ function ArrowRight() {
 /* ───────────── Article prose renderer ───────────── */
 function ArticleContent({ blocks = [] }) {
   return blocks.map((block, index) =>
-    block.t === "h2" ? (
+    block.t === "html" ? (
+      <div
+        key={`html-${index}`}
+        className="mt-[1.05em] max-w-[72ch] text-left text-[clamp(15px,0.9rem+0.42vw,17px)] leading-[1.78] text-[#3E5257] [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-extrabold [&_p]:mb-4 [&_strong]:font-extrabold [&_strong]:text-[#152A2E]"
+        dangerouslySetInnerHTML={{ __html: block.html || "" }}
+      />
+    ) : block.t === "h2" ? (
       <h2
         key={`${block.text}-${index}`}
         className="mt-[clamp(30px,3.4vw,46px)] max-w-[34ch] text-left text-[clamp(19px,1.05rem+1.05vw,27px)] font-extrabold leading-[1.2] tracking-[-0.03em] text-[#101E21] [text-wrap:balance] max-sm:mt-[30px] max-sm:text-xl"
@@ -383,6 +522,101 @@ export default function NewsDetailPage() {
   const slug = Array.isArray(routeSlug) ? routeSlug[0] : routeSlug;
   const bodyRef = useRef(null);
   const progressRef = useRef(null);
+  const [article, setArticle] = useState(null);
+  const [relatedNews, setRelatedNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
+
+  useEffect(() => {
+    if (!slug) return;
+
+    let isActive = true;
+
+    const fetchArticle = async () => {
+      setLoading(true);
+      setFetchError("");
+      setArticle(null);
+
+      try {
+        const listResponse = await newsService.getNews(0, 100);
+        const rows = extractNewsRows(listResponse);
+
+        const staticFallback = NEWS[slug];
+        const matchedItem = rows.find((item) => {
+          const itemSlug = getNewsSlug(item);
+          const itemTitle = slugify(item?.title || "");
+          return (
+            itemSlug === slug ||
+            itemTitle === slug ||
+            (staticFallback?.title &&
+              String(item?.title || "").toLowerCase() === staticFallback.title.toLowerCase())
+          );
+        });
+
+        let detailItem = matchedItem;
+
+        if (matchedItem && getNewsId(matchedItem)) {
+          try {
+            const detailResponse = await newsService.getNewsById(getNewsId(matchedItem));
+            detailItem = extractNewsRecord(detailResponse) || matchedItem;
+          } catch (detailError) {
+            console.warn("News detail endpoint failed; using list record:", detailError);
+          }
+        }
+
+        if (!detailItem && staticFallback) {
+          detailItem = staticFallback;
+        }
+
+        if (!isActive) return;
+
+        if (detailItem) {
+          setArticle(normalizeNewsRecord(detailItem, staticFallback || {}));
+        } else {
+          setArticle(null);
+          setFetchError("Unable to find this news article.");
+        }
+
+        const related = rows
+          .filter((item) => {
+            const itemSlug = getNewsSlug(item);
+            return itemSlug && itemSlug !== slug && itemSlug !== getNewsSlug(matchedItem || {});
+          })
+          .slice(0, 4)
+          .map(normalizeRelatedRecord);
+
+        setRelatedNews(
+          related.length
+            ? related
+            : PUBLIC_NEWS_SLUGS
+                .filter((itemSlug) => itemSlug !== slug && NEWS[itemSlug])
+                .slice(0, 4)
+                .map((itemSlug) => ({ slug: itemSlug, ...NEWS[itemSlug] }))
+        );
+      } catch (error) {
+        console.error("Fetch News Detail Error:", error);
+
+        if (!isActive) return;
+
+        if (NEWS[slug]) {
+          setArticle(normalizeNewsRecord(NEWS[slug], NEWS[slug]));
+        } else {
+          setFetchError(
+            error?.response?.data?.message ||
+            "Unable to load this article. Please try again later."
+          );
+        }
+      } finally {
+        if (isActive) setLoading(false);
+      }
+    };
+
+    fetchArticle();
+
+    return () => {
+      isActive = false;
+    };
+  }, [slug]);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -411,7 +645,15 @@ export default function NewsDetailPage() {
 
   if (!slug) return null;
 
-  const news = NEWS[slug];
+  const news = article;
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#FBFCFC] px-5 py-28 text-center font-[Manrope,ui-sans-serif,system-ui,-apple-system,sans-serif]">
+        <p className="text-sm font-semibold text-[#5F7175]">Loading news article...</p>
+      </main>
+    );
+  }
 
   /* ── Not found ── */
   if (!news) {
@@ -437,7 +679,7 @@ export default function NewsDetailPage() {
                 Article not found
               </h1>
               <p className="mb-[22px] mt-3.5 max-w-[55ch] text-[15px] leading-[1.7] text-[#5F7175]">
-                This news item is no longer available. Browse the latest updates from the Luneblaze team.
+                {fetchError || "This news item is no longer available. Browse the latest updates from the Luneblaze team."}
               </p>
               <Link href="/news" className="inline-flex items-center gap-[9px] rounded-[10px] bg-[#17AEB9] px-[19px] py-[13px] text-[13.5px] font-bold text-white no-underline hover:bg-[#0E8B95]">
                 Explore all news <ArrowRight />
@@ -449,10 +691,7 @@ export default function NewsDetailPage() {
     );
   }
 
-  const related = PUBLIC_NEWS_SLUGS
-    .filter((itemSlug) => itemSlug !== slug && NEWS[itemSlug])
-    .slice(0, 4)
-    .map((itemSlug) => ({ slug: itemSlug, ...NEWS[itemSlug] }));
+  const related = relatedNews;
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#FBFCFC] font-[Manrope,ui-sans-serif,system-ui,-apple-system,sans-serif] text-[#172326] antialiased [&_*]:box-border">
@@ -539,6 +778,7 @@ export default function NewsDetailPage() {
               alt={news.title}
               fill
               priority
+              unoptimized
               sizes="(max-width: 900px) 100vw, 840px"
               className="object-cover"
             />
@@ -639,6 +879,7 @@ export default function NewsDetailPage() {
                     src={item.image}
                     alt={item.title}
                     fill
+                    unoptimized
                     sizes="(max-width: 560px) 50vw, (max-width: 900px) 50vw, 25vw"
                     className="object-cover transition-transform duration-500 ease-[cubic-bezier(.22,.8,.2,1)] group-hover:scale-[1.045]"
                   />

@@ -248,11 +248,18 @@ const sendCertificate = async ({ userId }) => {
 // Generate certificate using registered email and webinar ID
 // Backend: generateCertificate() - POST
 const generateCertificate = async ({ email, webinar_id }) => {
-  return postRequest(
-    "/generateCertificate.json",
+  const response = await api.post(
+    "/generateCertificate",
     { email, webinar_id },
-    "Generate certificate API error:"
+    {
+      responseType: "blob",
+      headers: {
+        Accept: "application/pdf",
+      },
+    }
   );
+
+  return response;
 };
 
 // =====================================================

@@ -1,7 +1,7 @@
 import "./globals.css";
+
 import { Manrope } from "next/font/google";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import Loader from "@/components/layout/Loader";
 
 const manrope = Manrope({
@@ -19,6 +19,7 @@ export const metadata = {
   },
 };
 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -26,9 +27,7 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning
         className={`${manrope.variable} min-h-screen bg-[#F4F8F8] font-sans antialiased`}
       >
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <ConditionalLayout>{children}</ConditionalLayout>
         <Loader />
       </body>
     </html>

@@ -1,6 +1,5 @@
 "use client";
 import axios from 'axios';
-import { get } from 'jquery';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';

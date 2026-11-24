@@ -1,7 +1,7 @@
 "use client";
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import _sidebar from '@/components/admin/_sidebar';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -16,7 +16,7 @@ import { isAuthenticated } from '@/services/admin-auth';
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function Magzine() {
+function MagzineContent() {
 	const router = useRouter();
     const searchParams = useSearchParams();
 	const [swrData, setSWRData] = useState(false);
@@ -725,5 +725,21 @@ const LoadingComponent = ({ progress }) => {
 				<div className="text-gray-900">Please wait Internship are being Added, do not close the window...</div>
 			</div>
 		</div>
+	);
+}
+
+// useSearchParams() must be rendered inside a Suspense boundary
+// when this page is statically prerendered by Next.js.
+export default function Magzine() {
+	return (
+		<Suspense
+			fallback={
+				<div className="flex min-h-screen items-center justify-center">
+					<p>Loading internships...</p>
+				</div>
+			}
+		>
+			<MagzineContent />
+		</Suspense>
 	);
 }

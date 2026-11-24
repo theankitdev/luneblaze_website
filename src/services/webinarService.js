@@ -79,7 +79,20 @@ const getWebinars = async ({ offset = 1, limit = 20 } = {}) => {
       params: { offset, limit },
     });
 
-    return response.data;
+    let result = response.data;
+
+    // Temporary workaround for PHP warnings before JSON
+    if (typeof result === "string") {
+      const jsonStart = result.indexOf('{"status"');
+
+      if (jsonStart === -1) {
+        throw new Error("Valid JSON response not found.");
+      }
+
+      result = JSON.parse(result.slice(jsonStart));
+    }
+
+    return result;
   } catch (error) {
     handleApiError("Get webinars API error:", error);
   }

@@ -1,4 +1,5 @@
 // src/app/webinars/[slug]/page.jsx
+
 "use client";
 
 import Link from "next/link";
@@ -6,6 +7,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import webinarService from "@/services/webinarService";
 import paymentService from "@/services/paymentService";
+import DOMPurify from "isomorphic-dompurify";
 
 /* ───────────── Share row ───────────── */
 function ShareRow({ title }) {
@@ -72,7 +74,6 @@ function slugify(value = "") {
 
 function getCategory(item = {}) {
   const value = String(item.type || item.category || item.subtitle || "").toUpperCase();
-
   if (value.includes("SQAAF")) return "SQAAF";
   if (value.includes("NAAC")) return "NAAC";
   if (value.includes("NBA")) return "NBA";
@@ -83,25 +84,20 @@ function getCategory(item = {}) {
 
 function getAssetUrl(path, host = "") {
   if (!path) return "";
-
   const value = String(path).trim();
   if (/^(https?:)?\/\//i.test(value) || value.startsWith("data:")) {
     return value;
   }
-
   const cleanHost = String(host || "").replace(/\/+$/, "");
   const cleanPath = value.replace(/^\/+/, "");
-
   if (!cleanHost) return `/${cleanPath}`;
   return `${cleanHost}/${cleanPath}`;
 }
 
 function formatDate(value) {
   if (!value) return "To be announced";
-
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return String(value);
-
   return date.toLocaleDateString("en-IN", {
     day: "numeric",
     month: "long",
@@ -112,13 +108,10 @@ function formatDate(value) {
 function formatTime(value) {
   if (!value) return "";
   const raw = String(value);
-
   // Keep already formatted values readable.
   if (/[ap]m/i.test(raw)) return raw;
-
   const match = raw.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
   if (!match) return raw;
-
   const date = new Date();
   date.setHours(Number(match[1]), Number(match[2]), 0, 0);
   return date.toLocaleTimeString("en-IN", {
@@ -129,16 +122,13 @@ function formatTime(value) {
 
 function getDuration(start, end) {
   if (!start || !end) return "To be announced";
-
   const toMinutes = (value) => {
     const parts = String(value).split(":").map(Number);
     return (parts[0] || 0) * 60 + (parts[1] || 0);
   };
-
   let minutes = toMinutes(end) - toMinutes(start);
   if (minutes < 0) minutes += 24 * 60;
   if (!minutes) return "To be announced";
-
   const hours = Math.floor(minutes / 60);
   const remaining = minutes % 60;
   return [hours ? `${hours} hr${hours > 1 ? "s" : ""}` : "", remaining ? `${remaining} min` : ""]
@@ -148,18 +138,15 @@ function getDuration(start, end) {
 
 function getStatus(item = {}) {
   const status = String(item.status || "").toLowerCase();
-
   if (["completed", "complete", "past", "closed", "on demand", "ondemand"].includes(status)) {
     return "completed";
   }
-
   if (item.session_date) {
     const date = new Date(item.session_date);
     if (!Number.isNaN(date.getTime()) && date.getTime() < Date.now()) {
       return "completed";
     }
   }
-
   return "upcoming";
 }
 
@@ -178,7 +165,6 @@ function mapWebinar(item = {}, host = "") {
     getText(item.description) ||
     getText(item.subtitle) ||
     "Webinar details will be updated soon.";
-
   const image = getAssetUrl(item.image, host) || FALLBACK_IMAGE;
   const speakerImage = getAssetUrl(item.speaker_image, host) || FALLBACK_SPEAKER_IMAGE;
   const speakerName = getText(item.speaker) || "Speaker details to be announced";
@@ -272,37 +258,30 @@ export default function WebinarDetailPage({ params }) {
   const handleCertificateRequest = async (event) => {
     event.preventDefault();
     setCertError("");
-
     const email = certEmail.trim();
     if (!email || !webinar?.id) {
       setCertError("Please enter the email address you used to register.");
       return;
     }
-
     setCertLoading(true);
-
     try {
       const response = await webinarService.generateCertificate({
         email,
         webinar_id: webinar.id,
       });
-
       const blob =
         response?.data instanceof Blob
           ? response.data
           : response instanceof Blob
             ? response
             : null;
-
       if (!blob || blob.size === 0) {
         throw new Error("The server did not return a valid certificate PDF.");
       }
-
       // Check the PDF signature instead of relying only on the MIME type.
       const signature = await blob.slice(0, 5).text();
       if (signature !== "%PDF-") {
         let message = "The server returned an invalid certificate response.";
-
         try {
           const responseText = await blob.text();
           const errorData = JSON.parse(responseText);
@@ -310,28 +289,22 @@ export default function WebinarDetailPage({ params }) {
         } catch {
           // Keep the fallback message when the response is not JSON.
         }
-
         throw new Error(message);
       }
-
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       const safeEmail = email.replace(/[^a-zA-Z0-9_-]/g, "_");
-
       link.href = downloadUrl;
       link.download = `Certificate_${safeEmail}.pdf`;
       document.body.appendChild(link);
       link.click();
       link.remove();
-
       window.setTimeout(() => {
         window.URL.revokeObjectURL(downloadUrl);
       }, 1000);
     } catch (err) {
       console.error("Certificate Download Error:", err);
-
       let message = err?.message || "Unable to download your certificate. Please try again.";
-
       if (err?.response?.data instanceof Blob) {
         try {
           const errorData = JSON.parse(await err.response.data.text());
@@ -340,7 +313,6 @@ export default function WebinarDetailPage({ params }) {
           // Keep the original error message.
         }
       }
-
       setCertError(message);
     } finally {
       setCertLoading(false);
@@ -350,12 +322,10 @@ export default function WebinarDetailPage({ params }) {
   const handleRegistrationSubmit = async (event) => {
     event.preventDefault();
     setPaymentError("");
-
     if (!webinar?.id || !webinar?.price || Number(webinar.price) < 1) {
       setPaymentError("Payment amount is not available for this webinar.");
       return;
     }
-
     const formData = new FormData(event.currentTarget);
     const details = {
       name: String(formData.get("name") || "").trim(),
@@ -369,23 +339,19 @@ export default function WebinarDetailPage({ params }) {
       setPaymentError("Please complete all registration fields.");
       return;
     }
-
     setPaymentLoading(true);
     try {
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) throw new Error("Razorpay Checkout could not be loaded.");
-
       const orderResponse = await paymentService.createRazorpayOrder({
         amount: Number(webinar.price),
       });
       if (orderResponse?.status !== "success" || !orderResponse?.data?.id) {
         throw new Error(orderResponse?.message || "Unable to create payment order.");
       }
-
       const order = orderResponse.data;
       const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
       if (!razorpayKey) throw new Error("Razorpay Key ID is not configured.");
-
       const checkout = new window.Razorpay({
         key: razorpayKey,
         amount: order.amount,
@@ -423,7 +389,6 @@ export default function WebinarDetailPage({ params }) {
         },
         modal: { ondismiss: () => setPaymentLoading(false) },
       });
-
       checkout.on("payment.failed", (response) => {
         console.error("RAZORPAY PAYMENT FAILED:", response);
         console.error("Error Details:", {
@@ -434,16 +399,13 @@ export default function WebinarDetailPage({ params }) {
           reason: response?.error?.reason,
           metadata: response?.error?.metadata,
         });
-
         const errorMessage =
           response?.error?.description ||
           response?.error?.reason ||
           "Payment failed. Please try again.";
-
         setPaymentError(errorMessage);
         setPaymentLoading(false);
       });
-
       checkout.open();
     } catch (err) {
       setPaymentError(err.message || "Unable to start payment.");
@@ -453,7 +415,6 @@ export default function WebinarDetailPage({ params }) {
 
   useEffect(() => {
     let active = true;
-
     Promise.resolve(params)
       .then((value) => {
         if (active) setSlug(value?.slug || null);
@@ -464,7 +425,6 @@ export default function WebinarDetailPage({ params }) {
           setLoading(false);
         }
       });
-
     return () => {
       active = false;
     };
@@ -472,27 +432,22 @@ export default function WebinarDetailPage({ params }) {
 
   useEffect(() => {
     if (!slug) return;
-
     let active = true;
 
     async function loadWebinar() {
       setLoading(true);
       setError("");
-
       try {
         const listResponse = await webinarService.getWebinars({
           offset: 1,
           limit: 100,
         });
-
         const rows = Array.isArray(listResponse?.data) ? listResponse.data : [];
         const host = listResponse?.host || "";
-
         const selectedRow = rows.find((item) => {
           const itemId = String(item.id ?? "");
           const itemTitleSlug = slugify(item.title);
           const itemSubtitleSlug = slugify(item.subtitle);
-
           return (
             slug === itemId ||
             slug === `${itemId}-${itemTitleSlug}` ||
@@ -500,20 +455,15 @@ export default function WebinarDetailPage({ params }) {
             (itemSubtitleSlug && slug === itemSubtitleSlug)
           );
         });
-
         if (!selectedRow) {
           throw new Error("This webinar could not be found.");
         }
-
         const detailResponse = await webinarService.getWebinarById(selectedRow.id);
         const detailItem = detailResponse?.data || selectedRow;
-
         if (detailResponse?.status === "error") {
           throw new Error(detailResponse?.message || "Unable to load webinar details.");
         }
-
         const mapped = mapWebinar({ ...selectedRow, ...detailItem }, host);
-
         const related = rows
           .filter((item) => String(item.id) !== String(selectedRow.id))
           .slice(0, 3)
@@ -529,7 +479,6 @@ export default function WebinarDetailPage({ params }) {
               href: `/webinars/${mappedItem.slug}`,
             };
           });
-
         if (active) {
           setWebinar(mapped);
           setOtherWebinars(related);
@@ -583,7 +532,7 @@ export default function WebinarDetailPage({ params }) {
       {/* ── Hero ──────────────────────────────────── */}
       <section
         id="hero"
-        className="relative overflow-hidden border-b border-[#D6E3E5] bg-white px-[clamp(20px,4vw,52px)] pb-[clamp(24px,2.8vw,36px)] pt-[clamp(100px,10.5vw,132px)]"
+        className="relative overflow-hidden border-b border-[#D6E3E5] bg-white px-[clamp(20px,4vw,52px)] pb-[clamp(24px,2.8vw,36px)] pt-[clamp(60px,5vw,132px)]"
       >
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#F8FDFD] via-[#F1FAFB] to-[#EDF7F8]" />
@@ -743,8 +692,19 @@ export default function WebinarDetailPage({ params }) {
                   </span>
                   <h3 className="text-[clamp(15px,1.5vw,17px)] font-extrabold tracking-[-0.018em] text-[#152A2E]">Overview</h3>
                 </div>
-                {webinar.overview.map((p, i) => (
-                  <p key={i} className="mt-3 text-[clamp(14px,1.1vw,15.5px)] leading-[1.76] text-[#3E5257]">{p}</p>
+                {webinar.overview.map((content, i) => (
+                  <div
+                    key={i}
+                    className="mt-3 text-[clamp(14px,1.1vw,15.5px)] leading-[1.76] text-[#3E5257]
+                      [&_p]:mb-3 [&_p:last-child]:mb-0
+                      [&_strong]:font-bold
+                      [&_ul]:my-3 [&_ul]:list-disc [&_ul]:pl-6
+                      [&_ol]:my-3 [&_ol]:list-decimal [&_ol]:pl-6
+                      [&_li]:mb-1"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(content || ""),
+                    }}
+                  />
                 ))}
               </div>
 
@@ -814,7 +774,6 @@ export default function WebinarDetailPage({ params }) {
                   <p className="mt-3 text-[12.5px] leading-[1.6] text-[rgba(214,240,243,0.86)]">
                     Enter the email address you used to register. Your participation certificate will be generated and downloaded as a PDF.
                   </p>
-
                   <form
                     onSubmit={handleCertificateRequest}
                     className="mt-4 grid gap-2.5"

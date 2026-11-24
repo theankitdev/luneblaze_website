@@ -2,163 +2,105 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-const ROLES = {
-  "quality-consultant": {
-    title: "Quality & Accreditation Consultant",
-    dept: "Consulting",
-    type: "Full-time",
-    place: "Faridabad / Remote",
-    experience: "2+ years",
-    blurb:
-      "Guide institutions through SQAAF, NABET or NAAC cycles end to end — assessment, documentation, evidence and audit readiness.",
-    about: [
-      "You will work directly with schools and colleges through a full quality cycle — sitting with leadership, mapping their position against the framework, and turning gaps into a plan they can actually execute.",
-      "This is hands-on work rather than advisory-at-a-distance. You will be in the documents, in the evidence, and in the room when the assessor arrives.",
-    ],
-    do: [
-      "Run self-assessment and gap analysis with institutional teams.",
-      "Build documentation and evidence sets against framework standards.",
-      "Conduct mock audits and prepare institutions for external assessment.",
-      "Train IQAC and focus-group members so the work continues without you.",
-    ],
-    want: [
-      "Direct experience inside a quality or accreditation cycle, from either side.",
-      "Comfort writing clearly — policies, SOPs and reports that hold up under review.",
-      "Willingness to travel to institutions when a cycle needs it.",
-    ],
-  },
-  "iqac-specialist": {
-    title: "IQAC Implementation Specialist",
-    dept: "Consulting",
-    type: "Full-time",
-    place: "Remote",
-    experience: "2+ years",
-    blurb:
-      "Work with college IQAC teams on criteria mapping, SSR preparation and DVV response.",
-    about: [
-      "You will sit inside IQAC workflows — from criteria mapping to SSR drafting and DVV replies — and help institutions run a genuinely continuous quality cycle, not an annual scramble.",
-      "The role rewards people who know the NAAC manual intimately and can translate it into something a department coordinator can execute.",
-    ],
-    do: [
-      "Map institutional practice against NAAC criteria and key indicators.",
-      "Draft and review SSR sections with IQAC coordinators.",
-      "Prepare DVV clarifications with supporting evidence.",
-      "Run internal readiness reviews ahead of peer team visits.",
-    ],
-    want: [
-      "Hands-on IQAC or SSR drafting experience.",
-      "Familiarity with NAAC / NABET / NBA / NIRF frameworks.",
-      "Strong written communication and attention to detail.",
-    ],
-  },
-  "frontend-engineer": {
-    title: "Frontend Engineer",
-    dept: "Engineering",
-    type: "Full-time",
-    place: "Faridabad / Remote",
-    experience: "2+ years",
-    blurb:
-      "Build the dashboards institutions run their quality cycle on. Careful, accessible, fast interfaces.",
-    about: [
-      "You will own product surfaces used daily by principals, IQAC coordinators and quality teams — dashboards, evidence workflows, review screens.",
-      "We care about craft: real accessibility, meaningful interactions, and performance that holds up on modest hardware.",
-    ],
-    do: [
-      "Ship React/Next.js features end to end with design and backend.",
-      "Own component architecture and design-system quality.",
-      "Instrument and improve performance on real devices.",
-      "Review PRs and raise the bar on frontend standards.",
-    ],
-    want: [
-      "Strong React + Next.js fundamentals.",
-      "Comfort with Tailwind and modern CSS.",
-      "An eye for accessibility and detail.",
-    ],
-  },
-  "customer-success": {
-    title: "Customer Success Manager",
-    dept: "Customer",
-    type: "Full-time",
-    place: "Faridabad",
-    experience: "3+ years",
-    blurb:
-      "Own the relationship with a portfolio of institutions from onboarding through to accreditation.",
-    about: [
-      "You will be the trusted point of contact for a portfolio of schools and colleges — from onboarding through their accreditation cycle and beyond.",
-      "Success here looks like institutions renewing because the product genuinely changed how they work, not because the contract rolled over.",
-    ],
-    do: [
-      "Onboard new institutions and drive activation.",
-      "Run quarterly reviews with leadership and quality teams.",
-      "Translate institutional needs into product feedback.",
-      "Own renewals and expansion within your portfolio.",
-    ],
-    want: [
-      "Prior CS/account management experience in B2B SaaS.",
-      "Strong relationship-building and communication.",
-      "Comfort with data — usage, health scores, renewals.",
-    ],
-  },
-  "content-training": {
-    title: "Content & Training Associate",
-    dept: "Content",
-    type: "Full-time",
-    place: "Remote",
-    experience: "1+ years",
-    blurb:
-      "Produce the guides, webinars and training that help quality teams do the work themselves.",
-    about: [
-      "You will translate quality frameworks into practical guides, walkthroughs, webinars and in-product help.",
-      "The work is editorial and instructional — clarity matters more than cleverness.",
-    ],
-    do: [
-      "Write guides and playbooks on SQAAF, NAAC and related frameworks.",
-      "Produce and host training webinars for institutions.",
-      "Maintain the in-product help library.",
-      "Work with the product team on onboarding content.",
-    ],
-    want: [
-      "Excellent written English and structural thinking.",
-      "Familiarity with education quality frameworks (or appetite to learn).",
-      "Comfort presenting to small groups.",
-    ],
-  },
-  "business-development": {
-    title: "Business Development — Institutions",
-    dept: "Growth",
-    type: "Full-time",
-    place: "Faridabad / Field",
-    experience: "3+ years",
-    blurb:
-      "Work with school groups and universities to scope how Luneblaze fits their quality journey.",
-    about: [
-      "You will own the top of the funnel for institutional deals — school groups, universities and colleges.",
-      "This is consultative selling: understanding where an institution is in their quality cycle and mapping Luneblaze to it.",
-    ],
-    do: [
-      "Build and manage a pipeline of institutional opportunities.",
-      "Run discovery calls with principals, IQAC heads and trust leadership.",
-      "Partner with Customer Success on handoffs and renewals.",
-      "Represent Luneblaze at education events and webinars.",
-    ],
-    want: [
-      "B2B SaaS sales experience, ideally in education.",
-      "Strong consultative and discovery skills.",
-      "Willingness to travel across India when needed.",
-    ],
-  },
-};
+import { getJobBySlug } from "@/services/jobService";
 
 export default function JobOpeningPage({ params }) {
-  const [slug, setSlug] = useState(null);
+  const [slug, setSlug] = useState("");
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    Promise.resolve(params).then((p) => setSlug(p.slug));
+    let active = true;
+
+    Promise.resolve(params)
+      .then((resolvedParams) => {
+        if (active) setSlug(resolvedParams?.slug || "");
+      })
+      .catch(() => {
+        if (active) {
+          setError("Unable to read the job URL.");
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
   }, [params]);
 
-  if (!slug) return null;
-  const role = ROLES[slug];
+  useEffect(() => {
+    if (!slug) return;
+
+    let active = true;
+    setLoading(true);
+    setError("");
+    setRole(null);
+
+    getJobBySlug(slug)
+      .then((data) => {
+        if (!active) return;
+
+        if (!data) {
+          setRole(null);
+          return;
+        }
+
+        const parseList = (value) => {
+          if (Array.isArray(value)) return value;
+          if (typeof value === "string") {
+            try {
+              const parsed = JSON.parse(value);
+              return Array.isArray(parsed) ? parsed : value ? [value] : [];
+            } catch {
+              return value ? [value] : [];
+            }
+          }
+          return [];
+        };
+
+        setRole({
+          ...data,
+          dept: data.department || "",
+          type: data.employment_type || "",
+          place: data.location || "",
+          experience: data.experience || "",
+          blurb: data.short_description || "",
+          about: parseList(data.about),
+          do: parseList(data.responsibilities),
+          want: parseList(data.requirements),
+        });
+      })
+      .catch((err) => {
+        if (!active) return;
+        console.error("Get Job Details Error:", err);
+        setError(
+          err?.response?.data?.message ||
+            err?.message ||
+            "Unable to load this job opening. Please try again."
+        );
+        setRole(null);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [slug]);
+
+  if (loading || !slug) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white font-[Manrope,ui-sans-serif,system-ui,sans-serif] text-[#172326]">
+        <div className="text-center">
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#DCEAEC] border-t-[#17AEB9]" />
+          <p className="mt-4 text-sm font-semibold text-[#5F7175]">Loading job details...</p>
+        </div>
+      </main>
+    );
+  }
+
   if (!role) {
     return (
       <main className="min-h-screen bg-white font-[Manrope,ui-sans-serif,system-ui,sans-serif] text-[#172326]">
@@ -177,7 +119,7 @@ export default function JobOpeningPage({ params }) {
             Role not found
           </h1>
           <p className="mt-4 text-base text-[#4C6165]">
-            This opening is no longer available.{" "}
+            {error || "This opening is no longer available."}{" "}
             <Link href="/careers" className="font-semibold text-[#0E8B95] hover:underline">
               See current openings
             </Link>
